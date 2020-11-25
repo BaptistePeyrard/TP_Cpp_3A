@@ -8,11 +8,14 @@ namespace Client {
     class Client {
     public:
         
+        //Constructeur
         Client(int id, std::string nom, std::string prenom);
+        //getters
         int get_id() const;
         std::string get_nom() const;
         std::string get_prenom() const;
         int get_nbr_reservations() const;
+        //setters
         void set_id(int id);
         void set_nom(std::string nom);
         void set_prenom(std::string prenom);

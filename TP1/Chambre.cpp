@@ -11,13 +11,13 @@ namespace Chambre {
 		return _id;
 	}
 
-	std::string Chambre::get_type() const
+	std::string Chambre::get_type() const	//On renvoie un string et non une valeur de l'enumeration
 	{
 		
 		std::string str_type;
 		switch (_type)
 		{
-		case Type::Simple: str_type = "Simple" ;   break;
+		case Type::Simple: str_type = "Simple" ; break;
 		case Type::Double: str_type = "Double"; break;
 		case Type::Suite: str_type = "Suite";  break;
 		}

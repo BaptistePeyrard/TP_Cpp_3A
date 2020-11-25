@@ -49,11 +49,21 @@ namespace Hotel {
 			std::cout << "L'ajout n'a pas pu etre effectue (ajout d'un tableau nul)" << std::endl;
 		}
 		else {
-			for (int i = 0; i < liste_chambres.size(); i++) {
+			for (int i = 0; i < liste_chambres.size(); i++) {	//On parcourt le tableau et on ajoute 1 à 1 les chambres
 				ajouter_chambre(liste_chambres.at(i));
 			}
 		}
 
+	}
+
+	void Hotel::ajouter_client(int id_client)
+	{
+		_liste_id.push_back(id_client);
+	}
+
+	std::vector<int> Hotel::get_liste_id() const
+	{
+		return _liste_id;
 	}
 
 	

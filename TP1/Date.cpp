@@ -55,6 +55,17 @@ namespace Date {
 		to_display = month[_month - 1] + "/" + std::to_string(_day);
 		return to_display;
 	}
+	bool Date::checkBissextile(int year)
+	{
+
+		if (((year % 4 == 0) && (year % 100 != 100)) || (year % 400 == 0)){
+			return true;
+		}
+		else {
+			return false;
+		}
+
+	}
 	void Date::setYear(int year)
 	{
 		assert((year >= 2020) && (year <= 3000) && "Year is not valid");	//2020 car  date de debut au moins 2020 et 3000 pour éviter les reservations trop longues
@@ -79,7 +90,7 @@ namespace Date {
 		return false;
 	}
 
-	bool Date::operator <= (const Date& d) const
+	bool Date::operator <= (const Date& d) const	//Verification que la premiere date est inférieure ou égale à la deuxiéme
 	{
 		if (getYear() <= d.getYear()) {
 			return true;
@@ -96,24 +107,79 @@ namespace Date {
 		
 	}
 
-	int Date::operator - (const Date& d) const { // Soustraction de deux dates : renvoie le nombre de jour
+	int Date::operator - (const Date& d) { // Soustraction de deux dates : renvoie le nombre de nuits entre 2 dates
 		
-		int day;
-		int month;
-		int year;
 
-		if (getYear() == d.getYear()) {	//On a deja vérifié que la date de fin etait ultérieur à la date de début : l'année de fin est forcement superieur ou egale à l'année de debut
-			year = 0;
+		int compteur = 0;	//On va compter le nombre de nuits entre les deux dates
+		
+		int year = getYear();
+		while (year > d.getYear()) {	//Tant que l'année de la date de fin est > à l'année de la date de début
+
+			if (checkBissextile(year) == true) {	//Si l'année est bissextile, elle aura 366 jours
+				compteur += 366;
+			}
+			else {
+				compteur += 365;
+			}
+			year--;	//On enleve une année à la date de fin après avoir comptabilisé ses jours
 		}
-		else {
-			year = getYear() - d.getYear();
+		
+		int month = getMonth();
+		if (month > d.getMonth()) {	//Si la date de fin est toujours ultérieure à la date de début
+			
+			while (month > d.getMonth()) {
+				if(month == 1 || month == 3 || month == 7 || month == 8 || month == 10 || month == 12 ){	//mois avec 31 jours
+					compteur += 31;
+				}
+				else if (month == 4 || month == 6 || month == 9 || month == 11) {	//mois avec 30 jours
+					compteur += 30;
+				}
+				else{	//fevrier
+					if (checkBissextile(getYear()) == true) {	//Si année bissextile : 29 jours sinon 28
+						compteur += 29;
+					}
+					else {
+						compteur += 28;
+					}
+					
+				}
+				
+				month--;	//On enleve un mois à la date de fin après avoir comptabilisé ses jours
+				
+			}
+			
+		}
+		else if (month < d.getMonth()) {	//Si la date de fin est maintenant < à la date de début, il faudra enlever les jours de différence au compteur
+
+			while (month < d.getMonth()) {
+				if (month == 1 || month == 3 || month == 7 || month == 8 || month == 10 || month == 12) {	//mois avec 31 jours
+					compteur -= 31;
+				}
+				else if (month == 4 || month == 6 || month == 9 || month == 11) {	//mois avec 30 jours
+					compteur -= 30;
+				}
+				else {	//fevrier
+					if (checkBissextile(getYear()) == true) {	//Si année bissextile : 29 jours sinon 28
+						compteur -= 29;
+					}
+					else {
+						compteur -= 28;
+					}
+				}
+				month++;	//On ajoute un mois à la date de fin après avoir supprimer du compteur ses jours
+			}
+
+		}
+		
+		int day = getDay();
+		if (day > d.getDay()) {	//On ajoute le nombre de jour séparant les 2 dates
+			compteur += day - d.getDay();
+		}
+		else if (day < d.getDay()) {	//Si le jour de la date de fin est avant le jour de la date de depart, on soustrait le nombre de jours les séparants
+			compteur += day - d.getDay();
 		}
 
-		month = getMonth() - d.getMonth();	//Le nombre de mois peut etre différent
-		day = getDay() - d.getDay();
-
-		return (day + month * 30 + year * 365);	
-
+		return compteur;	//On return le nombre de jours entre les 2 dates
 	}
 
 }//namespace

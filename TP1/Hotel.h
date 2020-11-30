@@ -2,8 +2,8 @@
 #define HOTEL_H
 #include <string>
 #include <vector>
-#include <iostream>
 #include "Chambre.h"
+#include "Client.h"
 
 namespace Hotel {
 
@@ -14,17 +14,19 @@ namespace Hotel {
         //Constructeurs (avec ou sans un vector de chambre)
         Hotel(std::string id, std::string nom, std::string ville);
         Hotel(std::string id, std::string nom, std::string ville, std::vector<Chambre::Chambre> liste_chambres);
+        Hotel(std::string id, std::string nom, std::string ville, std::vector<Chambre::Chambre> liste_chambres, std::vector<Client::Client> liste_clients);
         //getters
         std::string get_id() const;
         std::string get_nom() const;
         std::string get_ville() const;
-        std::vector<Chambre::Chambre> get_liste_chambres() const;
+        std::vector<Chambre::Chambre>& get_liste_chambres();    //On envoie un type reference pour pouvoir modifier les chambres
+        std::vector<Client::Client>& get_liste_clients();
         //ajout de chambres dans la variable membre _liste_chambres
-        void ajouter_chambre(Chambre::Chambre chambre);
+        void ajouter_chambre(Chambre::Chambre& chambre);
         void ajouter_liste_chambres(std::vector<Chambre::Chambre> liste_chambres);
-        //ajouter une id de client
-        void ajouter_client(int id_client);
-        std::vector<int> get_liste_id() const;
+        //meme chose pour les clients
+        void ajouter_client(Client::Client& client);
+        void ajouter_liste_clients(std::vector<Client::Client> liste_clients);
 
     private:
 
@@ -32,12 +34,13 @@ namespace Hotel {
         std::string _nom;
         std::string _ville;
         std::vector<Chambre::Chambre> _liste_chambres;
-
-        //Pour appliquer le systeme de fidélité, on va ajouter un tableau avec les id des clients ayant deja réservé dans cet hotel
-        std::vector<int> _liste_id;
+        std::vector<Client::Client> _liste_clients;
 
 
     };
+
+    //Surcharge d'opérateur de sortie (ne peut pas etre une fonction membre et n'a pas besoin d'etre une fonction friend car on a des getters)
+    std::ostream& operator << (std::ostream& os, const Hotel& hotel);
 
 } //namespace
 

@@ -47,4 +47,12 @@ namespace Client {
 	}
 
 
+	std::ostream& operator<<(std::ostream& os, const Client& client)
+	{
+		std::string to_display;
+		to_display = "Ce client est " + client.get_nom() + " " + client.get_prenom();
+		os << to_display << std::endl;
+		return os;
+	}
+
 }//namespace

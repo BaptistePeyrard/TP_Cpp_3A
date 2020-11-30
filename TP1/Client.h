@@ -1,6 +1,7 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 #include <string>
+#include <iostream>
 
 
 namespace Client {
@@ -32,6 +33,9 @@ namespace Client {
 
        
     };
+
+    //Surcharge d'opérateur de sortie (ne peut pas etre une fonction membre et n'a pas besoin d'etre une fonction friend car on a des getters)
+    std::ostream& operator << (std::ostream& os, const Client& client);
 
 } //namespace
 

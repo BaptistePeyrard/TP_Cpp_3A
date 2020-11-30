@@ -5,43 +5,72 @@ namespace Reservation {
 
 	Reservation::Reservation(int id, Date::Date date_debut, Date::Date date_fin, Hotel::Hotel& hotel, Chambre::Chambre chambre, Client::Client client)	//On utilise un pointeur vers l'hotel car on va modifier une de ses variables membres
 	{
+		bool status = Check_validite_reservation(date_debut, date_fin, hotel, chambre);	//On verifie que la reservation est possible (Dates et Disponibilité)
+		assert(status == true && "Reservation non valide");
+
 
 		_id = id;
 		_id_hotel = hotel.get_id();
 		_id_chambre = chambre.get_id();
 		_id_client = client.get_id();
-
-		if (date_debut <= date_fin) {
-
-			_date_debut = date_debut;
-			_date_fin = date_fin;
-
-		}
-		else {
-
-			_date_debut = date_fin;
-			_date_fin = date_debut;
-
-		}
+		_date_debut = date_debut;	//Dates vérifiées
+		_date_fin = date_fin;
 
 		_montant = (_date_fin - _date_debut)*chambre.get_prix();
 		
-		//On recherche le nombre de fois que le client a déjà réservé dans cet hotel
+
 		_nbr_reservations = 0;
-		if (hotel.get_liste_id().size() != 0) {
-			for (int i = 0; i < hotel.get_liste_id().size(); i++) {
-				if (hotel.get_liste_id().at(i) == client.get_id()) {
-					_nbr_reservations++;
+		if (hotel.get_liste_clients().size() != 0) {
+			for (int i = 0; i < hotel.get_liste_clients().size(); i++) {
+				if (hotel.get_liste_clients().at(i).get_id() == _id_client) {	//Si le client existait deja
+					_nbr_reservations = hotel.get_liste_clients().at(i).get_nbr_reservations();	//On recupere le nombre de reservations
+					hotel.get_liste_clients().at(i).set_nbr_reservations(_nbr_reservations+1);	//On ajoute 1 au nombre de résérvation
 				}
 			}
 		}
 
+		if (_nbr_reservations == 0) {	//Le client est un nouveau client de l'hotel
+			hotel.ajouter_client(client);	//On ajoute le client
+			for (int i = 0; i < hotel.get_liste_clients().size(); i++) {
+				if (hotel.get_liste_clients().at(i).get_id() == _id_client) {
+					hotel.get_liste_clients().at(i).set_nbr_reservations(_nbr_reservations + 1);	//On ajoute 1 au nombre de résérvation (ici c'est la premiere reservation)
+				}
+			}
+		}
+
+
+		for (int i = 0; i < hotel.get_liste_chambres().size(); i++) {
+			if (hotel.get_liste_chambres().at(i).get_id() == chambre.get_id()) {	//On retrouve la chambre
+				hotel.get_liste_chambres().at(i).ajouter_jours_reservations(date_debut, date_fin);	//On ajoute les dates de la reservations dans la chambre
+
+			}
+
+		}
+	
+	}
+
+	bool Reservation::Check_validite_reservation(Date::Date date_debut, Date::Date date_fin, Hotel::Hotel& hotel, Chambre::Chambre chambre)
+	{
+		bool status = true;
+
+		if (date_fin <= date_debut) {	//Si les dates ne sont pas réspéctées
+			status = false;
+		}
 		
 
-		//Une fois le nombre de réservation récupéré, on ajoute l'id du client dans la liste de l'hotel pour la prochaine réservation
-		hotel.ajouter_client(client.get_id());
-		
+		for (int i = 0; i < hotel.get_liste_chambres().size(); i++) {
+			if (hotel.get_liste_chambres().at(i).get_id() == chambre.get_id()) {	//On retrouve la chambre
+				if (hotel.get_liste_chambres().at(i).Check_disponibilite(date_debut, date_fin) == false) {	//Si la chambre n'est pas disponible
+					status = false;
+				}
+				
+			}
 
+		}
+
+
+
+		return status;
 	}
 
 	int Reservation::get_id() const

@@ -5,6 +5,7 @@
 #include "Hotel.h"
 #include "Chambre.h"
 #include "Client.h"
+#include <cassert>
 
 
 namespace Reservation {
@@ -14,6 +15,7 @@ namespace Reservation {
     public:
 
         Reservation(int id, Date::Date date_debut, Date::Date date_fin, Hotel::Hotel& hotel, Chambre::Chambre chambre, Client::Client client);
+        bool Check_validite_reservation(Date::Date date_debut, Date::Date date_fin, Hotel::Hotel& hotel, Chambre::Chambre chambre); //On verifie la validité de la reservation
         //getters
         int get_id() const;
         int get_id_chambre() const;

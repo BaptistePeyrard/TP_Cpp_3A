@@ -1,6 +1,9 @@
 #ifndef CHAMBRE_H
 #define CHAMBRE_H
 #include <string>
+#include <vector>
+#include <iostream>
+#include "Date.h"
 
 enum class Type {Simple, Double, Suite};    //class enum contenant toutes les possibilités de type de chambre
 
@@ -13,23 +16,29 @@ namespace Chambre {
         Chambre(int id, Type type, int prix);
         //getters
         int get_id() const;
-        //Type get_type() const;
-        std::string get_type() const;
+        std::vector<Date::Date> get_disponibilite() const;
+        std::string get_type() const;   //Type get_type() const;
         int get_prix() const;
         //setters
         void set_id(int id);
         void set_type(Type type);
         void set_prix(int prix);
+        void ajouter_jours_reservations(Date::Date date_debut, Date::Date date_fin);    //Ajouter des jours résérvés
+        bool Check_disponibilite(Date::Date date_debut, Date::Date date_fin);   //Vérifier si un jour est déjà résérvé
 
+        
 
     private:
 
         int _id;
         Type _type;
         int _prix;
-
+        std::vector<Date::Date> _disponibilite; //Contient les numeros des jours où la chambre est deja résérvée
 
     };
+
+    //Surcharge d'opérateur de sortie (ne peut pas etre une fonction membre et n'a pas besoin d'etre une fonction friend car on a des getters)
+    std::ostream& operator << (std::ostream& os, const Chambre& chambre);   
 
 } //namespace
 

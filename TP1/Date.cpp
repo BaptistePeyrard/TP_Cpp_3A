@@ -1,10 +1,9 @@
 #include "date.h"
-#include <iostream>
-#include <cassert>
+
 
 namespace Date {
 
-	bool Date::checkDate(int month, int day) const {
+	bool Date::checkDate(int year, int month, int day) const {
 		bool status = true;
 
 		if ((month == 1 || month == 3 || month == 5 || month == 7
@@ -15,17 +14,20 @@ namespace Date {
 			&& (day > 30 || day < 1)) {
 			status = false;
 		}
-		else if ((month == 2) && (day > 28 || day < 1)) {
+		else if ((month == 2) && (day > 29 || day < 1)) {
 			status = false;
 		}
 		if ((month < 1) || (month > 12)) {
+			status = false;
+		}
+		if ((year < 2020) || (month > 3000)) {	//dates limites de reservations
 			status = false;
 		}
 		return status;
 	}
 
 	Date::Date(int year, int month, int day) {
-		bool status = checkDate(month, day);
+		bool status = checkDate(year, month, day);
 		assert(status == true && "Date is not valid");
 		_year = year;
 		_month = month;
@@ -50,12 +52,11 @@ namespace Date {
 	}
 	
 	std::string Date::toString() {
-		std::string month[12] = { "Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" };
-		std::string to_display;
-		to_display = month[_month - 1] + "/" + std::to_string(_day);
-		return to_display;
+		std::string str;
+		str = std::to_string(_year) + "/" + std::to_string(_month) + "/" + std::to_string(_day);
+		return str;
 	}
-	bool Date::checkBissextile(int year)
+	bool Date::checkBissextile(int year) const
 	{
 
 		if (((year % 4 == 0) && (year % 100 != 100)) || (year % 400 == 0)){
@@ -64,6 +65,29 @@ namespace Date {
 		else {
 			return false;
 		}
+
+	}
+	int Date::DaysInMonth(int year, int month) const
+	{
+		
+		int nbr;
+		if (month == 1 || month == 3 || month == 7 || month == 8 || month == 10 || month == 12) {	//mois avec 31 jours
+			nbr = 31;
+		}
+		else if (month == 4 || month == 6 || month == 9 || month == 11) {	//mois avec 30 jours
+			nbr = 30;
+		}
+		else {	//fevrier
+			if (checkBissextile(year) == true) {	//Si année bissextile : 29 jours sinon 28
+				nbr = 29;
+			}
+			else {
+				nbr = 28;
+			}
+
+		}
+		return nbr;
+
 
 	}
 	void Date::setYear(int year)
@@ -78,7 +102,7 @@ namespace Date {
 	}
 
 	void Date::setDay(int day) {
-		bool status = checkDate(_month, day);
+		bool status = checkDate(_year, _month, day);
 		assert(status == true && "Day is not valid");
 		_day = day;
 	}
@@ -92,10 +116,10 @@ namespace Date {
 
 	bool Date::operator <= (const Date& d) const	//Verification que la premiere date est inférieure ou égale à la deuxiéme
 	{
-		if (getYear() <= d.getYear()) {
+		if (getYear() < d.getYear()) {
 			return true;
 		}
-		else if ((getYear() == d.getYear()) && (getMonth() <= d.getMonth())) {
+		else if ((getYear() == d.getYear()) && (getMonth() < d.getMonth())) {
 			return true;
 		}
 		else if ((getYear() == d.getYear()) && (getMonth() == d.getMonth()) && (getDay() <= d.getDay())) {
@@ -105,6 +129,22 @@ namespace Date {
 			return false;
 		}
 		
+	}
+
+	bool Date::operator<(const Date& d) const
+	{
+		if (getYear() < d.getYear()) {
+			return true;
+		}
+		else if ((getYear() == d.getYear()) && (getMonth() < d.getMonth())) {
+			return true;
+		}
+		else if ((getYear() == d.getYear()) && (getMonth() == d.getMonth()) && (getDay() < d.getDay())) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	int Date::operator - (const Date& d) { // Soustraction de deux dates : renvoie le nombre de nuits entre 2 dates
@@ -126,47 +166,21 @@ namespace Date {
 		
 		int month = getMonth();
 		if (month > d.getMonth()) {	//Si la date de fin est toujours ultérieure à la date de début
-			
+
 			while (month > d.getMonth()) {
-				if(month == 1 || month == 3 || month == 7 || month == 8 || month == 10 || month == 12 ){	//mois avec 31 jours
-					compteur += 31;
-				}
-				else if (month == 4 || month == 6 || month == 9 || month == 11) {	//mois avec 30 jours
-					compteur += 30;
-				}
-				else{	//fevrier
-					if (checkBissextile(getYear()) == true) {	//Si année bissextile : 29 jours sinon 28
-						compteur += 29;
-					}
-					else {
-						compteur += 28;
-					}
-					
-				}
-				
-				month--;	//On enleve un mois à la date de fin après avoir comptabilisé ses jours
-				
+					compteur += DaysInMonth(year, month);
+					month--;	//On enleve un mois à la date de fin après avoir comptabilisé ses jours
+
 			}
-			
+
 		}
 		else if (month < d.getMonth()) {	//Si la date de fin est maintenant < à la date de début, il faudra enlever les jours de différence au compteur
 
 			while (month < d.getMonth()) {
-				if (month == 1 || month == 3 || month == 7 || month == 8 || month == 10 || month == 12) {	//mois avec 31 jours
-					compteur -= 31;
-				}
-				else if (month == 4 || month == 6 || month == 9 || month == 11) {	//mois avec 30 jours
-					compteur -= 30;
-				}
-				else {	//fevrier
-					if (checkBissextile(getYear()) == true) {	//Si année bissextile : 29 jours sinon 28
-						compteur -= 29;
-					}
-					else {
-						compteur -= 28;
-					}
-				}
+
+				compteur += DaysInMonth(year, month);
 				month++;	//On ajoute un mois à la date de fin après avoir supprimer du compteur ses jours
+
 			}
 
 		}
@@ -180,6 +194,63 @@ namespace Date {
 		}
 
 		return compteur;	//On return le nombre de jours entre les 2 dates
+	}
+
+	Date Date::operator+(const int days) const
+	{
+		
+		if (days < 0) { //if days <0, we call Date - (-days)
+			return *this - (days);
+		}
+		
+		Date tmp = *this; // the current date
+		int new_day = tmp.getDay() + days; // the new day is ok if new_day < end of month
+		int new_month = tmp.getMonth();
+		int new_year = tmp.getYear();
+		int days_in_month = tmp.DaysInMonth(new_year, new_month);
+		while (new_day > days_in_month) { // end of the month
+			new_day -= days_in_month; // the day in the next month
+			new_month++;
+			if (new_month > 12) { // end of the year
+				new_month = 1;
+				new_year++;
+			}
+			tmp.setMonth(new_month);
+			days_in_month = tmp.DaysInMonth(new_year, new_month);
+		}
+		return Date(new_year, new_month, new_day);
+	}
+
+	Date Date::operator-(const int days) const
+	{
+		if (days > 0) { //if days <0, we call Date - (-days)
+			return *this + (days);
+		}
+
+		Date tmp = *this; // the current date
+		int new_day = tmp.getDay() + days; // the new day is ok if new_day > 0
+		int new_month = tmp.getMonth();
+		int new_year = tmp.getYear();
+		int days_in_month = tmp.DaysInMonth(new_year, new_month);
+		while (new_day < 0) { // end of the month
+			new_day += days_in_month; // the day in the next month
+			new_month--;
+			if (new_month < 1) { // end of the year
+				new_month = 12;
+				new_year--;
+			}
+			tmp.setMonth(new_month);
+			days_in_month = tmp.DaysInMonth(new_year, new_month);
+		}
+		return Date(new_year, new_month, new_day);
+	}
+
+	Date Date::operator++(int)
+	{
+		Date tmp = *this;
+		*this = tmp + 1;
+		return tmp;
+		
 	}
 
 }//namespace

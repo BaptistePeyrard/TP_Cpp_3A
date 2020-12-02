@@ -65,6 +65,17 @@ namespace Chambre {
 
 	}
 
+	void Chambre::supprimer_jours_reservations(Date::Date date_debut, Date::Date date_fin)
+	{
+		if (_disponibilite.size() > 0) {
+
+			for (Date::Date y = date_debut; y < date_fin; y++) {
+				auto it = std::remove(_disponibilite.begin(), _disponibilite.end(), y);	//iterateur remove pour enlever les dates de reservation
+				_disponibilite.erase(it, _disponibilite.end());	//enleve les cases en trop
+			}
+		}
+	}
+
 	bool Chambre::Check_disponibilite(Date::Date date_debut, Date::Date date_fin)
 	{
 

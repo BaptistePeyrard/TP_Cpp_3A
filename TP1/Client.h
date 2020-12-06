@@ -22,7 +22,7 @@ namespace Client {
         void set_prenom(std::string prenom);
         void set_nbr_reservations(int nbr_reservations);
         
-
+        bool operator == (const Client& client) const; //Surchages d'opérateur pour comparer 2 clients
 
     private:
 

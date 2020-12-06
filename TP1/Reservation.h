@@ -20,8 +20,9 @@ namespace Reservation {
         int get_id() const;
         int get_id_chambre() const;
         int get_id_client() const;
-        std::string get_id_hotel() const;
-        int get_montant() const;
+        int get_id_hotel() const;
+        double get_montant_original() const;
+        double get_montant_reel() const;
         Date::Date get_date_debut() const;
         Date::Date get_date_fin() const;
         std::string get_nom_client() const;
@@ -38,16 +39,19 @@ namespace Reservation {
         void Annuler();
         ~Reservation();
 
+        bool operator == (const Reservation& reser) const; //Surchages d'opérateur pour comparer 2 reservations
+
     private:
 
         int _id;
         Date::Date _date_debut;
         Date::Date _date_fin;
-        std::string _id_hotel;
+        int _id_hotel;
         int _id_chambre;
         int _id_client;
         std::string _nom_client;
-        int _montant;
+        double _montant_original;
+        double _montant_reel;
         Hotel::Hotel* _hotel;   //Pointeur pour pouvoir modifier les valeurs de l'hotel
 
         //Pour le programme de fidélité, nous devons stocker le nbr de résérvation deja éffectué par le client
@@ -55,6 +59,9 @@ namespace Reservation {
 
 
     };
+
+    //Surcharge d'opérateur de sortie (ne peut pas etre une fonction membre et n'a pas besoin d'etre une fonction friend car on a des getters)
+    std::ostream& operator << (std::ostream& os, const Reservation& reser);
 
 } //namespace
 

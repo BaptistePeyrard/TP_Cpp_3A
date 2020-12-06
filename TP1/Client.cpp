@@ -46,11 +46,19 @@ namespace Client {
 		_nbr_reservations = nbr_reservations;
 	}
 
+	bool Client::operator==(const Client& client) const
+	{
+		if ((get_id() == client.get_id()) && (get_nom() == client.get_nom()) && (get_prenom() == client.get_prenom())) {
+			return true;
+		}
+		return false;
+	}
+
 
 	std::ostream& operator<<(std::ostream& os, const Client& client)
 	{
 		std::string to_display;
-		to_display = "Ce client est " + client.get_nom() + " " + client.get_prenom();
+		to_display = "Client numero " + std::to_string(client.get_id()) + " : " + client.get_nom() + " " + client.get_prenom();
 		os << to_display << std::endl;
 		return os;
 	}

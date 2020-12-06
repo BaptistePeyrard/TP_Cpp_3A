@@ -13,19 +13,21 @@ namespace Chambre {
        
     public:
 
-        Chambre(int id, Type type, int prix);
+        Chambre(int id, Type type, double prix);
         //getters
         int get_id() const;
         std::vector<Date::Date> get_disponibilite() const;
         std::string get_type() const;   //Type get_type() const;
-        int get_prix() const;
+        double get_prix() const;
         //setters
         void set_id(int id);
         void set_type(Type type);
-        void set_prix(int prix);
+        void set_prix(double prix);
         void ajouter_jours_reservations(Date::Date date_debut, Date::Date date_fin);    //Ajouter des jours résérvés
         void supprimer_jours_reservations(Date::Date date_debut, Date::Date date_fin);    //Supprimer des jours résérvés
         bool Check_disponibilite(Date::Date date_debut, Date::Date date_fin);   //Vérifier si un jour est déjà résérvé
+
+        bool operator == (const Chambre& chambre) const; //Surchages d'opérateur pour comparer 2 chambres
 
         
 
@@ -33,7 +35,7 @@ namespace Chambre {
 
         int _id;
         Type _type;
-        int _prix;
+        double _prix;
         std::vector<Date::Date> _disponibilite; //Contient les numeros des jours où la chambre est deja résérvée
 
     };

@@ -5,22 +5,22 @@ namespace Hotel {
 
 
 	
-	Hotel::Hotel(std::string id, std::string nom, std::string ville)
+	Hotel::Hotel(int id, std::string nom, std::string ville)
 	{
 		_id = id;
 		_nom = nom;
 		_ville = ville;
 	}
 	
-	Hotel::Hotel(std::string id, std::string nom, std::string ville, std::vector<Chambre::Chambre> liste_chambres) : _id(id), _nom(nom), _ville(ville), _liste_chambres(liste_chambres)
+	Hotel::Hotel(int id, std::string nom, std::string ville, std::vector<Chambre::Chambre> liste_chambres) : _id(id), _nom(nom), _ville(ville), _liste_chambres(liste_chambres)
 	{
 	}
 
-	Hotel::Hotel(std::string id, std::string nom, std::string ville, std::vector<Chambre::Chambre> liste_chambres, std::vector<Client::Client> liste_clients) : _id(id), _nom(nom), _ville(ville), _liste_chambres(liste_chambres), _liste_clients(liste_clients)
+	Hotel::Hotel(int id, std::string nom, std::string ville, std::vector<Chambre::Chambre> liste_chambres, std::vector<Client::Client> liste_clients) : _id(id), _nom(nom), _ville(ville), _liste_chambres(liste_chambres), _liste_clients(liste_clients)
 	{
 	}
 
-	std::string Hotel::get_id() const
+	int Hotel::get_id() const
 	{
 		return _id;
 	}
@@ -44,6 +44,11 @@ namespace Hotel {
 	{
 		return _liste_clients;
 	}
+
+	void Hotel::set_nom(std::string nom)
+	{
+		_nom = nom;
+	}
 	
 	void Hotel::ajouter_chambre(Chambre::Chambre& chambre)
 	{
@@ -63,6 +68,18 @@ namespace Hotel {
 
 	}
 
+	void Hotel::supprimer_chambre(Chambre::Chambre& chambre)
+	{
+		
+		if (_liste_chambres.size() > 0) {
+
+			auto it = std::remove(_liste_chambres.begin(), _liste_chambres.end(), chambre);	//iterateur remove pour enlever la chambre
+			_liste_chambres.erase(it, _liste_chambres.end());	//enleve les cases en trop
+			
+		}
+		
+	}
+
 	void Hotel::ajouter_client(Client::Client& client)
 	{
 		_liste_clients.push_back(client);
@@ -77,6 +94,16 @@ namespace Hotel {
 			for (int i = 0; i < liste_clients.size(); i++) {	//On parcourt le tableau et on ajoute 1 à 1 les clients
 				ajouter_client(liste_clients.at(i));
 			}
+		}
+	}
+
+	void Hotel::supprimer_client(Client::Client& client)
+	{
+		if (_liste_clients.size() > 0) {
+
+			auto it = std::remove(_liste_clients.begin(), _liste_clients.end(), client);	//iterateur remove pour enlever le client
+			_liste_clients.erase(it, _liste_clients.end());	//enleve les cases en trop
+
 		}
 	}
 

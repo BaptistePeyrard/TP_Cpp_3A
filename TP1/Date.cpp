@@ -6,19 +6,30 @@ namespace Date {
 	bool Date::checkDate(int year, int month, int day) const {
 		bool status = true;
 
-		if ((month == 1 || month == 3 || month == 5 || month == 7
-			|| month == 8 || month == 10 || month == 12) && (day > 31 || day < 1)) {
-			status = false;
-		}
-		else if ((month == 4 || month == 6 || month == 9 || month == 11)
-			&& (day > 30 || day < 1)) {
-			status = false;
-		}
-		else if ((month == 2) && (day > 29 || day < 1)) {
-			status = false;
+		if (year < 0) {
+			return false;
 		}
 		if ((month < 1) || (month > 12)) {
-			status = false;
+			return false;
+		}
+		if ((day < 1) || (day > 31)) {
+			return false;
+		}
+		if ((month == 1 || month == 3 || month == 5 || month == 7
+			|| month == 8 || month == 10 || month == 12) && (day > 31)) {
+			return false;
+		}
+		if ((month == 4 || month == 6 || month == 9 || month == 11)
+			&& (day > 30)) {
+			return false;
+		}
+		if ((month == 2) && (day > 29)) {
+			return false;
+		}
+		if ((month == 2) && (day == 29)) {
+			if ((year % 4 == 0) || ((year % 100 == 0) && (year % 400 == 0))) {
+				return false;
+			}
 		}
 		if ((year < 2020) || (month > 3000)) {	//dates limites de reservations
 			status = false;
@@ -46,6 +57,7 @@ namespace Date {
 	int Date::getDay() const {
 		return _day;
 	}
+
 	Date Date::nextDay() {
 		Date next(_year, _month, _day + 1);
 		return next;

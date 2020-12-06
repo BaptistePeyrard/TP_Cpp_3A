@@ -2,7 +2,7 @@
 
 namespace Chambre {
 
-	Chambre::Chambre::Chambre(int id, Type type, int prix) : _id(id), _type(type), _prix(prix)
+	Chambre::Chambre::Chambre(int id, Type type, double prix) : _id(id), _type(type), _prix(prix)
 	{
 		std::vector<Date::Date> vector_vide;
 		_disponibilite = vector_vide;
@@ -32,7 +32,7 @@ namespace Chambre {
 		return str_type;
 	}
 
-	int Chambre::get_prix() const
+	double Chambre::get_prix() const
 	{
 		return _prix;
 	}
@@ -47,7 +47,7 @@ namespace Chambre {
 		_type = type;
 	}
 
-	void Chambre::set_prix(int prix)
+	void Chambre::set_prix(double prix)
 	{
 		_prix = prix;
 	}
@@ -99,12 +99,20 @@ namespace Chambre {
 
 	}
 
+	bool Chambre::operator==(const Chambre& chambre) const
+	{
+		if ((get_id() == chambre.get_id()) && (get_type() == chambre.get_type())) {
+			return true;
+		}
+		return false;
+	}
+
 
 	//affichage de la sortie
 	std::ostream& operator<<(std::ostream& os, const Chambre& chambre)
 	{
 		std::string to_display;
-		to_display = "Cette chambre est la chambre numero " + std::to_string(chambre.get_id()) + " de type : " + chambre.get_type() + " avec commme prix : " + std::to_string(chambre.get_prix()) + " $ / nuit";
+		to_display = "Chambre numero " + std::to_string(chambre.get_id()) + " de type : " + chambre.get_type() + " avec commme prix : " + std::to_string(chambre.get_prix()) + " $ / nuit";
 		os << to_display << std::endl;
 		return os;
 	}

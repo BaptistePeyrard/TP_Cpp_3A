@@ -83,7 +83,7 @@ namespace Date {
 	{
 		
 		int nbr;
-		if (month == 1 || month == 3 || month == 7 || month == 8 || month == 10 || month == 12) {	//mois avec 31 jours
+		if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {	//mois avec 31 jours
 			nbr = 31;
 		}
 		else if (month == 4 || month == 6 || month == 9 || month == 11) {	//mois avec 30 jours
@@ -167,7 +167,7 @@ namespace Date {
 		int year = getYear();
 		while (year > d.getYear()) {	//Tant que l'année de la date de fin est > à l'année de la date de début
 
-			if (checkBissextile(year) == true) {	//Si l'année est bissextile, elle aura 366 jours
+			if (checkBissextile(d.getYear()) == true) {	//Si l'année est bissextile, elle aura 366 jours
 				compteur += 366;
 			}
 			else {
@@ -180,7 +180,7 @@ namespace Date {
 		if (month > d.getMonth()) {	//Si la date de fin est toujours ultérieure à la date de début
 
 			while (month > d.getMonth()) {
-					compteur += DaysInMonth(year, month);
+					compteur += DaysInMonth(d.getYear(), d.getMonth());
 					month--;	//On enleve un mois à la date de fin après avoir comptabilisé ses jours
 
 			}
@@ -189,8 +189,9 @@ namespace Date {
 		else if (month < d.getMonth()) {	//Si la date de fin est maintenant < à la date de début, il faudra enlever les jours de différence au compteur
 
 			while (month < d.getMonth()) {
-
-				compteur += DaysInMonth(year, month);
+				int save = compteur;
+				compteur -= DaysInMonth(year, month);
+				
 				month++;	//On ajoute un mois à la date de fin après avoir supprimer du compteur ses jours
 
 			}
@@ -202,7 +203,7 @@ namespace Date {
 			compteur += day - d.getDay();
 		}
 		else if (day < d.getDay()) {	//Si le jour de la date de fin est avant le jour de la date de depart, on soustrait le nombre de jours les séparants
-			compteur += day - d.getDay();
+			compteur -= d.getDay() - day;
 		}
 
 		return compteur;	//On return le nombre de jours entre les 2 dates
@@ -226,6 +227,7 @@ namespace Date {
 			if (new_month > 12) { // end of the year
 				new_month = 1;
 				new_year++;
+				tmp.setYear(new_year);
 			}
 			tmp.setMonth(new_month);
 			days_in_month = tmp.DaysInMonth(new_year, new_month);

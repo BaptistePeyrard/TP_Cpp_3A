@@ -21,7 +21,7 @@ void AjoutProduit()
 	if (titre == "0")gestionMagasin();
 	else {
 		std::cout << "Donnez une description de ce produit (tapez ""0"" pour annuler l'ajout)" << std::endl;
-		std::getline(desc,s);
+		std::getline(std::cin,desc);
 		if (desc == "0")gestionMagasin();
 		else {
 			std::cout << "Indiquez le prix du produit (tapez ""0"" pour annuler l'ajout)" << std::endl;
@@ -69,6 +69,7 @@ void gestionMagasin()
 	std::cout << "5) Retour" << std::endl;
 
 	std::cin >> action;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	system("cls");
 	switch (action)
 	{
@@ -119,15 +120,7 @@ void accueil()
 }
 int main()
 {
-	std::string name, title;
 
-	std::cout << "Enter your name: ";
-	std::getline(std::cin, name);
-
-	std::cout << "Enter your favourite movie: ";
-	std::getline(std::cin, title);
-
-	std::cout << name << "'s favourite movie is " << title;
 	accueil();
 	
 	/*

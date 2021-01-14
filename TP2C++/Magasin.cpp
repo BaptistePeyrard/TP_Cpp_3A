@@ -119,7 +119,6 @@ void Magasin::AfficherClient(int id)
 void Magasin::ValiderCommande(Commande c)
 {
 	m_commandes.push_back(new Commande(c));
-
 }
 
 void Magasin::ChangerStatusCommande(Commande c)

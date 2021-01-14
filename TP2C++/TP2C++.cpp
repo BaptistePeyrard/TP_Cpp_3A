@@ -10,6 +10,7 @@ std::string temp;  //Variable utilisé pour les moments ou il faut cliquer
 Magasin easystore;
 void accueil();
 void gestionMagasin();
+void gestionUtilisateurs();
 
 void AjoutProduit()
 {
@@ -30,12 +31,16 @@ void AjoutProduit()
 			else {
 				std::cout << "Indiquez la quantité disponible de ce produit (tapez ""0"" pour annuler l'ajout)" << std::endl;
 				std::cin >> dispo;
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 				if (dispo == 0)gestionMagasin();
 				else {
 					id = easystore.getProduits().size() + 1;
 					Produit produit(id, titre, desc, dispo, prix);
 					easystore.AddProduit(produit);
-					std::cout << "Le produit : " << produit.getTitre() << " a bien ete ajoute au magasin sous l'id : " << produit.getId() << std::endl;
+					std::cout << "Le produit  " << produit.getTitre() << " a bien ete ajoute au magasin sous l'id : " << produit.getId() << std::endl;
+					std::cout << "Appuyez pour revenir a la gestion du magasin....";
+					std::getline(std::cin, temp);
+					system("cls");
 					gestionMagasin();
 				}
 
@@ -49,12 +54,48 @@ void AffichageProduits()
 {
 	easystore.AfficherProduits();
 	std::cout << "Cliquez pour continuer" << std::endl;
-	std::cin >> temp;
+	std::getline(std::cin, temp);
+	system("cls");
 	gestionMagasin();
 }
 
 void AffichageProduit()
 {
+	std::string prd;
+	std::cout << "Entrez le nom du produit a afficher" << std::endl;
+	std::getline(std::cin, prd);
+	easystore.AfficherProduit(prd);
+	std::cout << std::endl << "Appuyez pour revenir a la gestion du magasin....";
+	std::getline(std::cin, temp);
+	system("cls");
+	gestionMagasin();
+}
+
+void MiseAJourQtt()
+{
+	bool found = false;
+	std::string nom;
+	int i = 0,dispo;
+	std::cout << "Indiquez le nom du produit pour lequel vous souhaitez modifier la quantite" << std::endl;
+	std::getline(std::cin, nom);
+	for (Produit* p : easystore.getProduits())
+	{
+		if (p->getTitre() == nom) found = true;
+		if (!found)i++;
+	}
+	if (!found)std::cout << "Ce produit n'existe pas" << std::endl;
+	else {
+		std::cout << "Indiquez la nouvelle quantité disponible pour " << nom << std::endl;
+		std::cin >> dispo;
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		easystore.getProduits()[i]->setQqtDispo(dispo);
+		std::cout << "Le produit " << easystore.getProduits()[i]->getTitre() << "a desormais une quantite disponible de " << easystore.getProduits()[i]->getQqtDispo() << std::endl;
+
+	}
+	std::cout << std::endl << "Appuyez pour revenir a la gestion du magasin....";
+	std::getline(std::cin, temp);
+	system("cls");
+	gestionMagasin();
 
 }
 
@@ -69,7 +110,7 @@ void gestionMagasin()
 	std::cout << "5) Retour" << std::endl;
 
 	std::cin >> action;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //Sert à empécher un fonctionnement pas paratique des std::getline de l'ajout d'objet,à ajouter apres chaque cin menant a des getline
 	system("cls");
 	switch (action)
 	{
@@ -81,14 +122,115 @@ void gestionMagasin()
 
 	case 3: AffichageProduit();
 		break;
+
+	case 4: MiseAJourQtt();
+		break;
+
 	case 5: accueil();
 		break;
 	}
 }
 
+void AjoutUtilisateur()
+{
+	std::string prenom, nom;
+	int id;
+	std::cout << "Indiquez le prenom de l'utilisateur (tapez ""0"" pour annuler l'ajout)" << std::endl;
+	std::getline(std::cin, prenom);
+	if (prenom == "0")gestionMagasin();
+	else {
+		std::cout << "Indiquez le nom de l'utilisateur(tapez ""0"" pour annuler l'ajout)" << std::endl;
+		std::getline(std::cin, nom);
+		if (nom == "0")gestionMagasin();
+		else {
+			id = easystore.getClients().size() + 1;
+			Client client(id, prenom, nom);
+			easystore.AddClient(client);
+			std::cout << "Le client  " << client.getPrenom() << " " << client.getNom() << " a bien ete ajoute sous l'id : " << client.getId() << std::endl;
+			std::cout << "Appuyez pour revenir a la gestion des utilisateurs....";
+			std::getline(std::cin, temp);
+			system("cls");
+			gestionUtilisateurs();
+				}
+
+			}
+}
+
+void AffichageUtilisateurs()
+{
+	easystore.AfficherClients();
+
+	std::cout << "Cliquez pour continuer" << std::endl;
+	std::getline(std::cin, temp);
+	system("cls");
+	gestionUtilisateurs();
+
+}
+void AffichageUtilisateur()
+{
+	std::cout << "Recherchez l'utilisateur par : " << std::endl;
+	std::cout << "1) son nom " << std::endl;
+	std::cout << "2) son id" << std::endl;
+	std::cout << "(Tapez autre chose pour annuler)" << std::endl;
+
+	std::cin >> action;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+	std::string nom;
+	switch (action)
+	{
+	case 1: 
+			std::cout << "Indiquez le nom de l'utilisateur a afficher" << std::endl;
+			std::getline(std::cin, nom);
+			easystore.AfficherClient(nom);
+		break;
+
+	case 2: int id;
+			std::cout << "Indiquez l'id de l'utilisateur a afficher" << std::endl;
+			std::cin >> id;
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			easystore.AfficherClient(id);
+		break;
+	}
+
+	std::cout << std::endl << "Appuyez pour revenir a la gestion des utilisateurs....";
+	std::getline(std::cin, temp);
+	system("cls");
+	gestionUtilisateurs();
+
+}
+
+
 void gestionUtilisateurs()
 {
+	std::cout << "Gestion des utilisateurs :" << std::endl;
 
+	std::cout << "1) Ajout d'un utilisateur/client" << std::endl;
+	std::cout << "2) Affichage de tous les utilisateurs" << std::endl;
+	std::cout << "3) Affichage d'un utilisateur" << std::endl;
+	std::cout << "4) Mise a jour des utilisateurs" << std::endl;
+	std::cout << "5) Retour" << std::endl;
+
+	std::cin >> action;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //Sert à empécher un fonctionnement pas paratique des std::getline de l'ajout d'utilisateur,à ajouter apres chaque cin menant a des getline
+	system("cls");
+	switch (action)
+	{
+	case 1: AjoutUtilisateur();
+		break;
+
+	case 2: AffichageUtilisateurs();
+		break;
+
+	case 3: AffichageUtilisateur();
+		break;
+
+	case 4: MiseAJourQtt();
+		break;
+
+	case 5: accueil();
+		break;
+	}
 }
 
 void gestionCommandes()

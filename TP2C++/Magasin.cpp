@@ -7,19 +7,19 @@ Magasin::Magasin()
 {
 }
 
-void Magasin::AddProduit(Produit& p)
+void Magasin::AddProduit(Produit& p)//Ajoute un produit au magasin
 {
 	Produit* pro = &p;
 	m_produits.push_back(pro);
 }
 
-void Magasin::AddClient(Client& c)
+void Magasin::AddClient(Client& c)//Ajoute un client au magasin
 {
 	Client* cli = &c;
 	m_clients.push_back(cli);
 }
 
-void Magasin::AfficherProduit(std::string name)
+void Magasin::AfficherProduit(std::string name)//Affiche un produit (Donner le nom en entrer) //Pour tous ce projet, les affichages peuvent être mal fait dans les tableaux si on met des nom trop longs 
 {
 	Produit pp;
 	bool found = false;
@@ -44,7 +44,7 @@ void Magasin::AfficherProduit(std::string name)
 }
 
 
-void Magasin::AfficherProduits()const
+void Magasin::AfficherProduits()const // Affiche tous les produits
 {
 	//Affichage du tableau pour  afficher la liste des produits
 	for (int i = 0; i < 11; i++)std::cout << "------";
@@ -67,7 +67,7 @@ void Magasin::AfficherProduits()const
 	
 }
 
-void Magasin::AfficherClients() const
+void Magasin::AfficherClients() const // Affiche tous les clients 
 {
 	Client client;
 	//Création du tableau pour  afficher la liste des clients
@@ -88,7 +88,7 @@ void Magasin::AfficherClients() const
 
 }
 
-void Magasin::AfficherClient(std::string name)
+void Magasin::AfficherClient(std::string name) //Affiche un client(Donner son nom en entrée)
 {
 	Client client;
 	bool found = false;
@@ -102,7 +102,7 @@ void Magasin::AfficherClient(std::string name)
 	if (!found)std::cout << "Ce client n'existe pas";
 }
 
-void Magasin::AfficherClient(int id)
+void Magasin::AfficherClient(int id)//Affiche un client(Donnée son id en entrée)
 {
 	Client client;
 	bool found = false;
@@ -116,25 +116,26 @@ void Magasin::AfficherClient(int id)
 	if (!found)std::cout << "Il n'y a aucun client avec cet Id";
 }
 
-void Magasin::ValiderCommande(Commande c)
+void Magasin::ValiderCommande(Commande& c)//Créer une commande et l'ajoute à la liste (Vide aussi le panier du client ciblée)
 {
-	m_commandes.push_back(new Commande(c));
+	Commande* pc = &c;
+	m_commandes.push_back(pc);
+	c.getClient().clearPanier();
 }
 
-void Magasin::ChangerStatusCommande(Commande c)
+void Magasin::ChangerStatusCommande(Commande c) //Passe une comande non livrée à livrée (et inversement mais pas utilisé)
 {
 	c.ChangerStatus();
 }
 
-void Magasin::AfficherCommandes()
+void Magasin::AfficherCommandes()//Affiche la liste des commandes
 {
 	for (Commande* c : m_commandes) {
-		Commande commande = *c;
-		std::cout << commande << std::endl ;
+		std::cout << *c << std::endl ;
 	}
 }
 
-void Magasin::AfficherCommandesDe(Client c)
+void Magasin::AfficherCommandesDe(Client c)//Affiche toutes les commandes d'un client (Donner ce client en entrée)
 {
 	for (Commande* com : m_commandes) {
 		Commande commande = *com;
@@ -143,17 +144,17 @@ void Magasin::AfficherCommandesDe(Client c)
 	}
 }
 
-std::vector<Client*> Magasin::getClients() const
+std::vector<Client*> Magasin::getClients() const //Renvoie la liste de clients
 {
 	return m_clients;
 }
 
-std::vector<Produit*> Magasin::getProduits() const
+std::vector<Produit*> Magasin::getProduits() const //Renvoie la liste de produits
 {
 	return m_produits;
 }
 
-std::vector<Commande*> Magasin::getCommandes() const
+std::vector<Commande*> Magasin::getCommandes() const //Renvoie la liste de commandes
 {
 	return m_commandes;
 }

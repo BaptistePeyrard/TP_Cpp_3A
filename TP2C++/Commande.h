@@ -9,7 +9,7 @@ public:
 
 	int getId() const;
 	Client getClient() const;
-	bool IsLivrée() const;
+	bool IsLivree() const;
 	void ChangerStatus();
 	std::vector<Produit> getProduits()const;
 

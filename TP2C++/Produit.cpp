@@ -11,37 +11,37 @@ Produit::~Produit()
 {
 }
 
-int Produit::getId() const
+int Produit::getId() const//Renvoie l'id du produit
 {
 	return _id;
 }
 
-std::string Produit::getTitre() const
+std::string Produit::getTitre() const//Renvoie le titre(nom) du produit
 {
 	return _titre;
 }
 
-std::string Produit::getDescription()const
+std::string Produit::getDescription()const//Renvoie la description du produit
 {
 	return _description;
 }
 
-int Produit::getQqtDispo()const
+int Produit::getQqtDispo()const //Renvoie la quandité disponible de ce produit
 {
 	return _qttDispo;
 }
 
-float Produit::getPrix()const
+float Produit::getPrix()const // Renvoie le prix de ce produit
 {
 	return _prix;
 }
 
-void Produit::setQqtDispo(int dispo)
+void Produit::setQqtDispo(int dispo)//Permet de modifier la quantité disponible de ce produit
 {
 	_qttDispo = dispo;
 }
 
-bool Produit::operator==(const Produit & p) const
+bool Produit::operator==(const Produit & p) const //Pour comparer 2 produits (Ils sont les mêmes si même Id et titre)
 {
 	if ((getId() == p.getId()) && (getTitre() == p.getTitre())) {
 		return true;
@@ -52,7 +52,7 @@ bool Produit::operator==(const Produit & p) const
 }
 
 
-std::ostream& operator<<(std::ostream& os, const Produit& produit)
+std::ostream& operator<<(std::ostream& os, const Produit& produit)//Pour afficher à l'écran les infos d'un produit
 {
 	if (produit.getTitre().length() > 4) {
 		if (produit.getDescription().length() > 23)

@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 
+//Voir le cpp pour avoir indication sur les méthodes
 class Magasin
 {
 public:
@@ -22,7 +23,7 @@ public:
 	void AfficherClients() const;
 	void AfficherClient(std::string name);
 	void AfficherClient(int id);
-	void ValiderCommande(Commande c);
+	void ValiderCommande(Commande& c);
 	void ChangerStatusCommande(Commande c);
 
 	void AfficherCommandes();

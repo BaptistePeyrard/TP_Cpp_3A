@@ -70,13 +70,13 @@ namespace Chambre {
 		if (_disponibilite.size() > 0) {
 
 			for (Date::Date y = date_debut; y < date_fin; y++) {
-				auto it = std::remove(_disponibilite.begin(), _disponibilite.end(), y);	//iterateur remove pour enlever les dates de reservation
+				auto it = std::remove(_disponibilite.begin(), _disponibilite.end(), y);	//iterateur remove pour identifier les dates à enlever
 				_disponibilite.erase(it, _disponibilite.end());	//enleve les cases en trop
 			}
 		}
 	}
 
-	bool Chambre::Check_disponibilite(Date::Date date_debut, Date::Date date_fin)
+	bool Chambre::Check_disponibilite(Date::Date date_debut, Date::Date date_fin) const
 	{
 
 		if (_disponibilite.size() > 0) {

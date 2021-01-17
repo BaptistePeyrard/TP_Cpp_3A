@@ -33,6 +33,7 @@ namespace Reservation {
         void set_dates(Date::Date date_debut, Date::Date date_fin);
         void set_chambre(Chambre::Chambre chambre);
         void set_client(Client::Client client);
+        void actualiser_montant();
 
         double montant_total(int nbr_reservations_pour_remise); //offre de 10% pour un nbr de reservations en parametre
         double montant_total(int nbr_reservations_pour_remise, double remise);  //offre en parametre

@@ -5,11 +5,8 @@ namespace Hotel {
 
 
 	
-	Hotel::Hotel(int id, std::string nom, std::string ville)
+	Hotel::Hotel(int id, std::string nom, std::string ville) : _id(id), _nom(nom), _ville(ville)
 	{
-		_id = id;
-		_nom = nom;
-		_ville = ville;
 	}
 	
 	Hotel::Hotel(int id, std::string nom, std::string ville, std::vector<Chambre::Chambre> liste_chambres) : _id(id), _nom(nom), _ville(ville), _liste_chambres(liste_chambres)

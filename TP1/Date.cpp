@@ -31,7 +31,7 @@ namespace Date {
 				return false;
 			}
 		}
-		if ((year < 2020) || (month > 3000)) {	//dates limites de reservations
+		if ((year < 2020) || (year > 3000)) {	//dates limites de reservations
 			status = false;
 		}
 		return status;
@@ -143,7 +143,7 @@ namespace Date {
 		
 	}
 
-	bool Date::operator<(const Date& d) const
+	bool Date::operator < (const Date& d) const
 	{
 		if (getYear() < d.getYear()) {
 			return true;
@@ -161,49 +161,51 @@ namespace Date {
 
 	int Date::operator - (const Date& d) { // Soustraction de deux dates : renvoie le nombre de nuits entre 2 dates
 		
-
+		Date save = d;
 		int compteur = 0;	//On va compter le nombre de nuits entre les deux dates
 		
 		int year = getYear();
-		while (year > d.getYear()) {	//Tant que l'année de la date de fin est > à l'année de la date de début
+		while (year > save.getYear()) {	//Tant que l'année de la date de fin est > à l'année de la date de début
 
-			if (checkBissextile(d.getYear()) == true) {	//Si l'année est bissextile, elle aura 366 jours
+			if (checkBissextile(save.getYear()) == true) {	//Si l'année est bissextile, elle aura 366 jours
 				compteur += 366;
 			}
 			else {
 				compteur += 365;
 			}
-			year--;	//On enleve une année à la date de fin après avoir comptabilisé ses jours
+			save.setYear(save.getYear() + 1);	//On ajoute une année à la date de debut après avoir comptabilisé ses jours
 		}
-		
+		//Une fois que les deux dates sont à la meme année, on s'occupe des mois
 		int month = getMonth();
-		if (month > d.getMonth()) {	//Si la date de fin est toujours ultérieure à la date de début
+		if (month > save.getMonth()) {	//Si la date de fin est toujours ultérieure à la date de début
 
-			while (month > d.getMonth()) {
-					compteur += DaysInMonth(d.getYear(), d.getMonth());
-					month--;	//On enleve un mois à la date de fin après avoir comptabilisé ses jours
-
+			while (month > save.getMonth()) {
+					compteur += DaysInMonth(save.getYear(), save.getMonth());
+					save.setMonth(save.getMonth() + 1);	//On ajoute un mois à la date de debut après avoir comptabilisé ses jours
 			}
 
 		}
-		else if (month < d.getMonth()) {	//Si la date de fin est maintenant < à la date de début, il faudra enlever les jours de différence au compteur
+		else if (month < save.getMonth()) {	//Si la date de fin est maintenant < à la date de début, il faudra enlever les jours de différence au compteur
 
-			while (month < d.getMonth()) {
-				int save = compteur;
-				compteur -= DaysInMonth(year, month);
-				
-				month++;	//On ajoute un mois à la date de fin après avoir supprimer du compteur ses jours
-
+			while (month < save.getMonth()) {
+				compteur -= DaysInMonth(save.getYear(), save.getMonth());
+				save.setMonth(save.getMonth() - 1);	//On enleve un mois à la date de debut après avoir supprimer du compteur ses jours
 			}
 
 		}
-		
+		//Une fois que les deux dates sont à la meme année et au meme mois, on s'occupe des jours
+
 		int day = getDay();
-		if (day > d.getDay()) {	//On ajoute le nombre de jour séparant les 2 dates
-			compteur += day - d.getDay();
+		if (day > save.getDay()) {	//On ajoute le nombre de jour séparant les 2 dates
+			compteur += day - save.getDay();
 		}
-		else if (day < d.getDay()) {	//Si le jour de la date de fin est avant le jour de la date de depart, on soustrait le nombre de jours les séparants
-			compteur -= d.getDay() - day;
+		else if (day < save.getDay()) {	//Si le jour de la date de fin est avant le jour de la date de depart, on soustrait le nombre de jours les séparants
+			compteur -= save.getDay() - day;
+		}
+
+		//ON va avoir un décalage d'un jour si la date de début se trouve dans un mois à 30 jours et la date de fin dans un mois à 31 jours :
+		if (DaysInMonth(year, month) > DaysInMonth(d.getYear(), d.getMonth())) {
+			compteur -= DaysInMonth(year, month) - DaysInMonth(d.getYear(), d.getMonth());
 		}
 
 		return compteur;	//On return le nombre de jours entre les 2 dates

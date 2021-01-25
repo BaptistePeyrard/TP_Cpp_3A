@@ -101,10 +101,14 @@ Reservation::Reservation ajouter_reservation(int id, Hotel::Hotel& hotel);	//7.a
 int nbr_nuits(Date::Date date_debut, Date::Date date_fin);	//7.b
 Chambre::Chambre choisir_chambre(Date::Date date_debut, Date::Date date_fin, Hotel::Hotel& hotel);	//8.a
 Client::Client choisir_client(Hotel::Hotel& hotel);	//9.a, 9.b, 9.c
-void afficher_reservations(std::vector<Reservation::Reservation> liste);	
+void afficher_reservations(std::vector<Reservation::Reservation> liste);
+void afficher_reservations(std::vector<Reservation::Reservation> liste, int nbr_reser, double reduc);	//Meme fonction avec l'affichage du prix avec reduction
 void afficher_reservations_par_numero(std::vector<Reservation::Reservation> liste, int numero);
+void afficher_reservations_par_numero(std::vector<Reservation::Reservation> liste, int numero, int nbr_reser, double reduc);	//Meme fonction avec l'affichage du prix avec reduction
 void afficher_reservations_par_client(std::vector<Reservation::Reservation> liste, int id_client);
+void afficher_reservations_par_client(std::vector<Reservation::Reservation> liste, int id_client, int nbr_reser, double reduc);	//Meme fonction avec l'affichage du prix avec reduction
 void afficher_reservations_par_client(std::vector<Reservation::Reservation> liste, std::string nom_client);
+void afficher_reservations_par_client(std::vector<Reservation::Reservation> liste, std::string nom_client, int nbr_reser, double reduc);	//Meme fonction avec l'affichage du prix avec reduction
 void modifier_reservation(Reservation::Reservation& reservation);
 //Interface console pour tester toutes les fonctions
 void afficher_menu();
@@ -117,7 +121,7 @@ void start(Stockage& save);
 int main() {
 
 
-	Stockage save;	//Creation de l'objet stockage
+	Stockage save;	//Creation de l'objet stockage permettant de sauvegarder les reservations et les hotels et de génerer des id
 
 	//Creation de plusieurs hotels, chambres, clients et reservations
 
@@ -169,7 +173,7 @@ int main() {
 	hotel3.ajouter_chambre(chambre14);
 	hotel3.ajouter_chambre(chambre15);
 
-	// 7 clients
+	// 10 clients
 	Client::Client client1(save.get_id_client(), "Nom1", "Prenom1");
 	Client::Client client2(save.get_id_client(), "Nom2", "Prenom2");
 	Client::Client client3(save.get_id_client(), "Nom3", "Prenom3");
@@ -177,6 +181,9 @@ int main() {
 	Client::Client client5(save.get_id_client(), "Nom5", "Prenom5");
 	Client::Client client6(save.get_id_client(), "Nom6", "Prenom6");
 	Client::Client client7(save.get_id_client(), "Nom6", "Prenom7");	//homonyme
+	Client::Client client8(save.get_id_client(), "Nom8", "Prenom8");
+	Client::Client client9(save.get_id_client(), "Nom9", "Prenom9");
+	Client::Client client10(save.get_id_client(), "Nom10", "Prenom10");
 
 	// on ajoute les clients dans les hotels :
 	hotel1.ajouter_client(client1);
@@ -186,6 +193,9 @@ int main() {
 	hotel3.ajouter_client(client5);
 	hotel3.ajouter_client(client6);
 	hotel3.ajouter_client(client7);
+	hotel3.ajouter_client(client8);
+	hotel3.ajouter_client(client9);
+	hotel3.ajouter_client(client10);
 
 	// une fois les hotels initialisés, on les ajoute dans l'objet stockage
 	save.Ajouter_hotel(hotel1);
@@ -244,6 +254,7 @@ int main() {
 	save.Ajouter_reservation(reser10);
 	save.Ajouter_reservation(reser11);
 	save.Ajouter_reservation(reser12);
+
 
 	start(save);
 
@@ -382,12 +393,33 @@ void afficher_reservations(std::vector<Reservation::Reservation> liste)
 	}
 }
 
+void afficher_reservations(std::vector<Reservation::Reservation> liste, int nbr_reser, double reduc)	//Fonction d'affichage avec le prix réel
+{
+	if (liste.size() > 0) {
+		for (int i = 0; i < liste.size(); i++) {
+			std::cout << liste.at(i) << " Prix (avec reduction) : " << liste.at(i).montant_total(nbr_reser, reduc) << std::endl;
+		}
+	}
+}
+
+
 void afficher_reservations_par_numero(std::vector<Reservation::Reservation> liste, int numero)
 {
 	if (liste.size() > 0) {
 		for (int i = 0; i < liste.size(); i++) {
 			if (liste.at(i).get_id() == numero) {
 				std::cout << liste.at(i) << std::endl;
+			}
+		}
+	}
+}
+
+void afficher_reservations_par_numero(std::vector<Reservation::Reservation> liste, int numero, int nbr_reser, double reduc)
+{
+	if (liste.size() > 0) {
+		for (int i = 0; i < liste.size(); i++) {
+			if (liste.at(i).get_id() == numero) {
+				std::cout << liste.at(i) << " Prix (avec reduction) : " << liste.at(i).montant_total(nbr_reser, reduc) << std::endl;
 			}
 		}
 	}
@@ -404,6 +436,17 @@ void afficher_reservations_par_client(std::vector<Reservation::Reservation> list
 	}
 }
 
+void afficher_reservations_par_client(std::vector<Reservation::Reservation> liste, int id_client, int nbr_reser, double reduc)
+{
+	if (liste.size() > 0) {
+		for (int i = 0; i < liste.size(); i++) {
+			if (liste.at(i).get_id_client() == id_client) {
+				std::cout << liste.at(i) << " Prix (avec reduction) : " << liste.at(i).montant_total(nbr_reser, reduc) << std::endl;
+			}
+		}
+	}
+}
+
 void afficher_reservations_par_client(std::vector<Reservation::Reservation> liste, std::string nom_client)
 {
 	if (liste.size() > 0) {
@@ -414,6 +457,20 @@ void afficher_reservations_par_client(std::vector<Reservation::Reservation> list
 		}
 	}
 }
+
+void afficher_reservations_par_client(std::vector<Reservation::Reservation> liste, std::string nom_client, int nbr_reser, double reduc)
+{
+	if (liste.size() > 0) {
+		for (int i = 0; i < liste.size(); i++) {
+			if (liste.at(i).get_nom_client() == nom_client) {
+				std::cout << liste.at(i) << " Prix (avec reduction) : " << liste.at(i).montant_total(nbr_reser, reduc) << std::endl;
+			}
+		}
+	}
+}
+
+/*	Fonction pour modifier une réservation :
+	Obsolete avec la partie graphique
 
 void modifier_reservation(Reservation::Reservation& reservation)
 {
@@ -453,6 +510,7 @@ void modifier_reservation(Reservation::Reservation& reservation)
 		reservation.set_client(choisir_client(hotel));
 	}
 }
+*/
 
 void afficher_menu()
 {
@@ -463,7 +521,8 @@ void afficher_menu()
 	std::cout << " 3 : Ajouter une reservation" << std::endl;
 	std::cout << " 4 : Modifier une reservation" << std::endl;
 	std::cout << " 5 : Afficher des informations" << std::endl;
-	std::cout << " 6 : Quitter " << std::endl << std::endl;
+	std::cout << " 6 : Appliquer un programme de fidelite" << std::endl;
+	std::cout << " 7 : Quitter " << std::endl << std::endl;
 	
 }
 
@@ -475,9 +534,8 @@ void afficher_menu_modif_hotel()
 	std::cout << " 2 : Modifier une chambre" << std::endl;
 	std::cout << " 3 : Ajouter un client" << std::endl;
 	std::cout << " 4 : Supprimer un client" << std::endl;
-	std::cout << " 5 : Modifier le nom de l'hotel" << std::endl;
-	std::cout << " 6 : Appliquer un programme de fidelite" << std::endl;	
-	std::cout << " 7 : Retour au menu " << std::endl << std::endl;
+	std::cout << " 5 : Modifier le nom de l'hotel" << std::endl;	
+	std::cout << " 6 : Retour au menu " << std::endl << std::endl;
 }
 
 void afficher_menu_modif_chambre()
@@ -756,23 +814,6 @@ void start(Stockage& save)
 			start(save);
 		}
 		else if (choix_2 == 6) {
-			//Programme de fidelite
-
-			system("CLS");
-			std::cout << "Rentrer le nombre de reservation necessaire pour avoir une reduction" << std::endl;
-			int nombre;
-			std::cin >> nombre;
-			std::cout << std::endl;
-			std::cout << "Rentrer le pourcentage de reduction (0.1 pour 10%...)" << std::endl;
-			double pourcentage;
-			std::cin >> pourcentage;
-			std::cout << std::endl;
-			save.set_nbr_reser(nombre);
-			save.set_pourcentage_reduc(pourcentage);
-			start(save);
-
-		}
-		else if (choix_2 == 7) {
 			start(save);
 		}
 		else {
@@ -989,7 +1030,8 @@ void start(Stockage& save)
 		else if (choix_5 == 4) {
 			//Liste des reservations
 			system("CLS");
-			afficher_reservations(save.get_liste_reservation());
+			afficher_reservations(save.get_liste_reservation(), save.get_nbr_reser(), save.get_pourcentage_reduc());
+
 		}
 		else if (choix_5 == 5) {
 			//Liste des reservations par id
@@ -999,7 +1041,7 @@ void start(Stockage& save)
 			std::cin >> id_reservation;
 			std::cout << std::endl;
 			
-			afficher_reservations_par_numero(save.get_liste_reservation(), id_reservation);
+			afficher_reservations_par_numero(save.get_liste_reservation(), id_reservation, save.get_nbr_reser(), save.get_pourcentage_reduc());
 		}
 		else if (choix_5 == 6) {
 			//Liste des reservations par id de client
@@ -1009,7 +1051,7 @@ void start(Stockage& save)
 			std::cin >> id_client;
 			std::cout << std::endl;
 
-			afficher_reservations_par_client(save.get_liste_reservation(), id_client);
+			afficher_reservations_par_client(save.get_liste_reservation(), id_client, save.get_nbr_reser(), save.get_pourcentage_reduc());
 
 			std::cout << std::endl;
 			double total = 0;
@@ -1031,7 +1073,7 @@ void start(Stockage& save)
 			int id_client = choisir_client(save.get_hotel(id_hotel)).get_id();	//On gere les homonymes
 			std::cout << std::endl;
 			
-			afficher_reservations_par_client(save.get_liste_reservation(), id_client);
+			afficher_reservations_par_client(save.get_liste_reservation(), id_client, save.get_nbr_reser(), save.get_pourcentage_reduc());
 
 			std::cout << std::endl;
 			double total = 0;
@@ -1059,6 +1101,23 @@ void start(Stockage& save)
 		std::string a;
 		std::cin >> a;
 		start(save);
+
+	}
+	else if (choix == 6) {
+	//Programme de fidelite
+
+	system("CLS");
+	std::cout << "Rentrer le nombre de reservation necessaire pour avoir une reduction" << std::endl;
+	int nombre;
+	std::cin >> nombre;
+	std::cout << std::endl;
+	std::cout << "Rentrer le pourcentage de reduction (0.1 pour 10%...)" << std::endl;
+	double pourcentage;
+	std::cin >> pourcentage;
+	std::cout << std::endl;
+	save.set_nbr_reser(nombre);
+	save.set_pourcentage_reduc(pourcentage);
+	start(save);
 
 	}
 	else if (choix == 6) {

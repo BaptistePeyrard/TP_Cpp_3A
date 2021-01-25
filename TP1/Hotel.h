@@ -39,6 +39,7 @@ namespace Hotel {
         std::string _ville;
         std::vector<Chambre::Chambre> _liste_chambres;
         std::vector<Client::Client> _liste_clients;
+      
 
 
     };

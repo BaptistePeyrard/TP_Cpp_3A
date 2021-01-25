@@ -46,7 +46,7 @@ namespace Hotel {
 	{
 		_nom = nom;
 	}
-	
+
 	void Hotel::ajouter_chambre(Chambre::Chambre& chambre)
 	{
 		_liste_chambres.push_back(chambre);

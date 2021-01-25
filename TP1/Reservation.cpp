@@ -305,7 +305,7 @@ namespace Reservation {
 			}
 		}
 
-		//On doit changer le nombre de reservations de l'ancien client et du nouveau client
+		//On doit changer le nombre de reservations de l'ancien client
 		if (_hotel->get_liste_clients().size() > 0) {
 			for (int i = 0; i < _hotel->get_liste_clients().size(); i++) {
 				if (_id_client == _hotel->get_liste_clients().at(i).get_id()) {	//Ancien client

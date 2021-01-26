@@ -237,10 +237,12 @@ void AjoutProduitA()		//Permet d'ajouter un produit au panier d'un utilisateur
 			}
 			if (!foundP)std::cout << "Ce produit n'existe pas" << std::endl;
 			else {
-				easystore.getClients()[i]->addProduit(*easystore.getProduits()[y]);
-				easystore.getProduits()[y]->setQqtDispo(easystore.getProduits()[y]->getQqtDispo() - 1);
-				std::cout << "Le produit " << easystore.getProduits()[y]->getTitre() << "a ete ajoute au panier de " << easystore.getClients()[i]->getPrenom() << easystore.getClients()[i]->getNom() << std::endl;
-
+				if (easystore.getProduits()[y]->getQqtDispo() == 0)std::cout << "Ce produit n'est plus dispoible" << std::endl;
+				else {
+					easystore.getClients()[i]->addProduit(*easystore.getProduits()[y]);
+					easystore.getProduits()[y]->setQqtDispo(easystore.getProduits()[y]->getQqtDispo() - 1);
+					std::cout << "Le produit " << easystore.getProduits()[y]->getTitre() << "a ete ajoute au panier de " << easystore.getClients()[i]->getPrenom() << easystore.getClients()[i]->getNom() << std::endl;
+				}
 			}
 		}
 		break;

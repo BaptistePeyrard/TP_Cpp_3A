@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 
+
 //Voir le cpp pour avoir indication sur les méthodes
 class Magasin
 {

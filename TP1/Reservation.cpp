@@ -3,7 +3,7 @@
 namespace Reservation {
 
 
-	Reservation::Reservation(int id, Date::Date date_debut, Date::Date date_fin, Hotel::Hotel& hotel, Chambre::Chambre chambre, Client::Client client)	//On utilise un pointeur vers l'hotel car on va modifier une de ses variables membres
+	Reservation::Reservation(int id, Date::Date date_debut, Date::Date date_fin, Hotel::Hotel& hotel, Chambre::Chambre chambre, Client::Client client)	//On utilise une reference vers l'hotel car on va modifier une de ses variables membres
 	{
 		bool status = Check_validite_reservation(date_debut, date_fin, hotel, chambre);	//On verifie que la reservation est possible (Dates et Disponibilité)
 		assert(status == true && "Reservation non valide");
@@ -127,46 +127,59 @@ namespace Reservation {
 
 	void Reservation::set_date_debut(Date::Date date_debut)
 	{
-		if (date_debut <= _date_fin) {
+		if (date_debut < _date_fin) {
 
 			for (int i = 0; i < _hotel->get_liste_chambres().size(); i++) {	//On doit changer la date de début dans la chambre
 				if (_id_chambre == _hotel->get_liste_chambres().at(i).get_id()) {	//On retrouve la chambre dans l'hotel
-					if (_date_debut < date_debut) {
-						_hotel->get_liste_chambres().at(i).supprimer_jours_reservations(_date_debut, date_debut);	//On supprime les jours entre l'ancienne date debut et la nouvelle si la nouvelle est plus proche de la date de fin
-					}
-					else {
-						_hotel->get_liste_chambres().at(i).ajouter_jours_reservations(date_debut, _date_debut);	//On ajoute des jours si la nouvelle date de debut est avant l'ancienne
-					}
-				}
-			}
 
-			_date_debut = date_debut;
+					
+
+						if (_date_debut < date_debut) {
+							_hotel->get_liste_chambres().at(i).supprimer_jours_reservations(_date_debut, date_debut);	//On supprime les jours entre l'ancienne date debut et la nouvelle si la nouvelle est plus proche de la date de fin
+							_date_debut = date_debut;
+						}
+						else if((date_debut < _date_debut ) && (_hotel->get_liste_chambres().at(i).Check_disponibilite(date_debut, _date_debut) == true)){
+							_hotel->get_liste_chambres().at(i).ajouter_jours_reservations(date_debut, _date_debut);	//On ajoute des jours si la nouvelle date de debut est avant l'ancienne
+							_date_debut = date_debut;
+						}
+				}
+		
+				
+			}
 		}
 		else {
 			std::cout << "Date non valide" << std::endl;
 		}
+		actualiser_montant();
 	}
 
 	void Reservation::set_date_fin(Date::Date date_fin)
 	{
-		if (_date_debut <= date_fin) {
+		if (_date_debut < date_fin) {
 
 			for (int i = 0; i < _hotel->get_liste_chambres().size(); i++) {	//On doit changer la date de fin dans la chambre
 				if (_id_chambre == _hotel->get_liste_chambres().at(i).get_id()) {	//On retrouve la chambre dans l'hotel
-					if (date_fin < _date_fin) {
-						_hotel->get_liste_chambres().at(i).supprimer_jours_reservations(date_fin, _date_fin);
-					}
-					else {
-						_hotel->get_liste_chambres().at(i).ajouter_jours_reservations(_date_fin, date_fin);
-					}
+
+					
+
+						if (date_fin < _date_fin) {	//Si la chambre est disponible pour la nouvelle date de fin
+							_hotel->get_liste_chambres().at(i).supprimer_jours_reservations(date_fin, _date_fin);	//On supprime les jours si la nouvelle date de fin est avant l'ancienne
+							_date_fin = date_fin;
+						}
+						else if((_date_fin < date_fin) && (_hotel->get_liste_chambres().at(i).Check_disponibilite(_date_fin, date_fin) == true)){	//Si la cambre est disponible pour la nouvelle date de fin
+							_hotel->get_liste_chambres().at(i).ajouter_jours_reservations(_date_fin, date_fin);	//On ajoute des jours si la nouvelle date de fin est après l'ancienne
+							_date_fin = date_fin;
+						}
+
 				}
+
 			}
 
-			_date_fin = date_fin;
 		}
 		else {
 			std::cout << "Date non valide" << std::endl;
 		}
+		actualiser_montant();
 	}
 
 	void Reservation::set_dates(Date::Date date_debut, Date::Date date_fin)
@@ -177,13 +190,20 @@ namespace Reservation {
 			for (int i = 0; i < _hotel->get_liste_chambres().size(); i++) {	//On doit changer la date de fin dans la chambre
 				if (_id_chambre == _hotel->get_liste_chambres().at(i).get_id()) {	//On retrouve la chambre dans l'hotel
 					
-						_hotel->get_liste_chambres().at(i).supprimer_jours_reservations(_date_debut, _date_fin);
-						_hotel->get_liste_chambres().at(i).ajouter_jours_reservations(date_debut, date_fin);
+					_hotel->get_liste_chambres().at(i).supprimer_jours_reservations(_date_debut, _date_fin);	//On supprime les anciennes disponibilités
+					if (_hotel->get_liste_chambres().at(i).Check_disponibilite(date_debut, date_fin)) {	//Si la cambre est disponible pour les nouvelles dates
+						_hotel->get_liste_chambres().at(i).ajouter_jours_reservations(date_debut, date_fin);	//On ajoute les nouvelles
+
+						_date_debut = date_debut;
+						_date_fin = date_fin;
+					}
+					else {
+						_hotel->get_liste_chambres().at(i).ajouter_jours_reservations(_date_debut, _date_fin);	//On rétablie les anciennes dates
+					}
 				}
 			}
-			_date_debut = date_debut;
-			_date_fin = date_fin;
 		}
+		actualiser_montant();
 	}
 
 	void Reservation::set_chambre(Chambre::Chambre chambre)	//On change l'id de la chambre mais aussi potentiellement son prix
@@ -191,19 +211,28 @@ namespace Reservation {
 
 		//On doit changer la disponibilité de l'ancienne chambre et de la nouvelle chambre
 		if (_hotel->get_liste_chambres().size() > 0) {
+
 			for (int i = 0; i < _hotel->get_liste_chambres().size(); i++) {
-				if (_id_chambre == _hotel->get_liste_chambres().at(i).get_id()) {	//Ancienne chambre
-					_hotel->get_liste_chambres().at(i).supprimer_jours_reservations(_date_debut, _date_fin);
-				}
-				else if (chambre.get_id() == _hotel->get_liste_chambres().at(i).get_id()) {	//Nouvelle chambre
-					_hotel->get_liste_chambres().at(i).ajouter_jours_reservations(_date_debut, _date_fin);
+
+				if ((chambre.get_id() == _hotel->get_liste_chambres().at(i).get_id()) && (_hotel->get_liste_chambres().at(i).Check_disponibilite(_date_debut, _date_fin))) {	//Si la nouvelle chambre est disponible
+
+					for (int y = 0; y < _hotel->get_liste_chambres().size(); y++) {	//On reparcourt la liste des chambres pour annuler l'ancienne chambre et reserver la nouvelle
+
+						if (_id_chambre == _hotel->get_liste_chambres().at(y).get_id()) {	//Ancienne chambre
+							_hotel->get_liste_chambres().at(y).supprimer_jours_reservations(_date_debut, _date_fin);
+						}
+						else if (chambre.get_id() == _hotel->get_liste_chambres().at(i).get_id()) {	//Nouvelle chambre
+							_hotel->get_liste_chambres().at(y).ajouter_jours_reservations(_date_debut, _date_fin);
+						}
+					}
+
+					//On change l'id et le montant de la chambre dans les variables membres 
+					_id_chambre = chambre.get_id();
 				}
 			}
 		}
 
-		//On change l'id et le montant de la chambre dans les variables membres 
-		_id_chambre = chambre.get_id();
-		_montant_original = (_date_fin - _date_debut) * chambre.get_prix();
+		actualiser_montant();
 	}
 
 	void Reservation::set_client(Client::Client client)
@@ -223,26 +252,43 @@ namespace Reservation {
 		}
 
 		_id_client = client.get_id();
+		
+	}
 
+	void Reservation::actualiser_montant()
+	{
+		//Pour actualier la variable membre _montant lors d'un changment
+
+		for (int i = 0; i < _hotel->get_liste_chambres().size(); i++) {
+			if (_hotel->get_liste_chambres().at(i).get_id() == _id_chambre) {
+				_montant_original = (_date_fin - _date_debut) * _hotel->get_liste_chambres().at(i).get_prix();
+			}
+		}
+		
 	}
 
 	double Reservation::montant_total(int nbr_reservations_pour_remise)
 	{;
-		if (_nbr_reservations >= nbr_reservations_pour_remise) {
-			_montant_reel = _montant_original - _montant_original*0.1;	//remise de 10%
-			
-		}
 		
-		return _montant_reel;
+		if (_nbr_reservations >= nbr_reservations_pour_remise) {
+			double montant_reel = _montant_original - _montant_original*0.1;	//remise de 10%
+			return montant_reel;
+		}
+		else {
+			return _montant_original;
+		}
 	}
 
 	double Reservation::montant_total(int nbr_reservations_pour_remise, double remise)
 	{
+		
 		if (_nbr_reservations >= nbr_reservations_pour_remise) {
-			_montant_reel = _montant_original - _montant_original *remise;
-
+			double montant_reel = _montant_original - _montant_original *remise;
+			return montant_reel;
 		}
-		return _montant_reel;
+		else {
+			return _montant_original;
+		}
 	}
 
 	void Reservation::Annuler()
@@ -259,7 +305,7 @@ namespace Reservation {
 			}
 		}
 
-		//On doit changer le nombre de reservations de l'ancien client et du nouveau client
+		//On doit changer le nombre de reservations de l'ancien client
 		if (_hotel->get_liste_clients().size() > 0) {
 			for (int i = 0; i < _hotel->get_liste_clients().size(); i++) {
 				if (_id_client == _hotel->get_liste_clients().at(i).get_id()) {	//Ancien client
@@ -269,6 +315,8 @@ namespace Reservation {
 			}
 		}
 		
+		delete _hotel;	//On detruit le pointeur
+
 		//Une fois les données de l'hotel rétablies, on peut detruire la reservation
 		Reservation::~Reservation();
 		

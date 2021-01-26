@@ -23,9 +23,10 @@ namespace Chambre {
         void set_id(int id);
         void set_type(Type type);
         void set_prix(double prix);
+        //autres méthodes
         void ajouter_jours_reservations(Date::Date date_debut, Date::Date date_fin);    //Ajouter des jours résérvés
         void supprimer_jours_reservations(Date::Date date_debut, Date::Date date_fin);    //Supprimer des jours résérvés
-        bool Check_disponibilite(Date::Date date_debut, Date::Date date_fin);   //Vérifier si un jour est déjà résérvé
+        bool Check_disponibilite(Date::Date date_debut, Date::Date date_fin) const;   //Vérifier si un jour est déjà résérvé
 
         bool operator == (const Chambre& chambre) const; //Surchages d'opérateur pour comparer 2 chambres
 

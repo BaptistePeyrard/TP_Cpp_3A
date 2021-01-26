@@ -97,14 +97,18 @@ private:
 	double _pourcentage_reduction;
 };
 
-Reservation::Reservation ajouter_reservation(int id, Hotel::Hotel& hotel);
-int nbr_nuits(Date::Date date_debut, Date::Date date_fin);
-Chambre::Chambre choisir_chambre(Date::Date date_debut, Date::Date date_fin, Hotel::Hotel& hotel);
-Client::Client choisir_client(Hotel::Hotel& hotel);
+Reservation::Reservation ajouter_reservation(int id, Hotel::Hotel& hotel);	//7.a
+int nbr_nuits(Date::Date date_debut, Date::Date date_fin);	//7.b
+Chambre::Chambre choisir_chambre(Date::Date date_debut, Date::Date date_fin, Hotel::Hotel& hotel);	//8.a
+Client::Client choisir_client(Hotel::Hotel& hotel);	//9.a, 9.b, 9.c
 void afficher_reservations(std::vector<Reservation::Reservation> liste);
+void afficher_reservations(std::vector<Reservation::Reservation> liste, int nbr_reser, double reduc);	//Meme fonction avec l'affichage du prix avec reduction
 void afficher_reservations_par_numero(std::vector<Reservation::Reservation> liste, int numero);
+void afficher_reservations_par_numero(std::vector<Reservation::Reservation> liste, int numero, int nbr_reser, double reduc);	//Meme fonction avec l'affichage du prix avec reduction
 void afficher_reservations_par_client(std::vector<Reservation::Reservation> liste, int id_client);
+void afficher_reservations_par_client(std::vector<Reservation::Reservation> liste, int id_client, int nbr_reser, double reduc);	//Meme fonction avec l'affichage du prix avec reduction
 void afficher_reservations_par_client(std::vector<Reservation::Reservation> liste, std::string nom_client);
+void afficher_reservations_par_client(std::vector<Reservation::Reservation> liste, std::string nom_client, int nbr_reser, double reduc);	//Meme fonction avec l'affichage du prix avec reduction
 void modifier_reservation(Reservation::Reservation& reservation);
 //Interface console pour tester toutes les fonctions
 void afficher_menu();
@@ -116,198 +120,151 @@ void start(Stockage& save);
 
 int main() {
 
-	Stockage save;
 
-	Hotel::Hotel hotel(save.get_id_hotel(), "Hotel1", "Dijon");
+	Stockage save;	//Creation de l'objet stockage permettant de sauvegarder les reservations et les hotels et de génerer des id
 
+	//Creation de plusieurs hotels, chambres, clients et reservations
+
+
+
+	// 3 hotels
+	Hotel::Hotel hotel1(save.get_id_hotel(), "Hotel1", "Dijon");
+	Hotel::Hotel hotel2(save.get_id_hotel(), "Hotel2", "Paris");
+	Hotel::Hotel hotel3(save.get_id_hotel(), "Hotel3", "Londres");
+
+	// 15 chambres
 	Type typeenum = Type::Simple;
 	Chambre::Chambre chambre1(save.get_id_chambre(), typeenum, 100);
-	Client::Client client1(save.get_id_client(), "Nom1", "Prenom1");
-	Client::Client client2(save.get_id_client(), "Nom2", "Prenom2");
-
-	Chambre::Chambre chambre2(save.get_id_chambre(), typeenum, 110);
+	Chambre::Chambre chambre2(save.get_id_chambre(), typeenum, 100);
+	Chambre::Chambre chambre3(save.get_id_chambre(), typeenum, 100);
+	Chambre::Chambre chambre4(save.get_id_chambre(), typeenum, 100);
+	Chambre::Chambre chambre5(save.get_id_chambre(), typeenum, 100);
+	Chambre::Chambre chambre6(save.get_id_chambre(), typeenum, 100);
+	Chambre::Chambre chambre7(save.get_id_chambre(), typeenum, 100);
 
 	typeenum = Type::Double;
-	Chambre::Chambre chambre3(save.get_id_chambre(), typeenum, 200);
+	Chambre::Chambre chambre8(save.get_id_chambre(), typeenum, 200);
+	Chambre::Chambre chambre9(save.get_id_chambre(), typeenum, 200);
+	Chambre::Chambre chambre10(save.get_id_chambre(), typeenum, 200);
+	Chambre::Chambre chambre11(save.get_id_chambre(), typeenum, 200);
+	Chambre::Chambre chambre12(save.get_id_chambre(), typeenum, 200);
 
 	typeenum = Type::Suite;
-	Chambre::Chambre chambre4(save.get_id_chambre(), typeenum, 400);
+	Chambre::Chambre chambre13(save.get_id_chambre(), typeenum, 400);
+	Chambre::Chambre chambre14(save.get_id_chambre(), typeenum, 400);
+	Chambre::Chambre chambre15(save.get_id_chambre(), typeenum, 400);
 
-	hotel.ajouter_chambre(chambre1);
-	hotel.ajouter_chambre(chambre2);
-	hotel.ajouter_chambre(chambre3);
-	hotel.ajouter_chambre(chambre4);
-	hotel.ajouter_client(client1);
-	hotel.ajouter_client(client2);
-	save.Ajouter_hotel(hotel);
+	// on ajoute les chambres dans les hotels :
+	hotel1.ajouter_chambre(chambre1);
+	hotel1.ajouter_chambre(chambre2);
+	hotel1.ajouter_chambre(chambre3);
+	hotel1.ajouter_chambre(chambre8);
+	hotel1.ajouter_chambre(chambre9);
 
+	hotel2.ajouter_chambre(chambre4);
+	hotel2.ajouter_chambre(chambre5);
+	hotel2.ajouter_chambre(chambre6);
+	hotel2.ajouter_chambre(chambre10);
+	hotel2.ajouter_chambre(chambre13);
+
+	hotel3.ajouter_chambre(chambre7);
+	hotel3.ajouter_chambre(chambre11);
+	hotel3.ajouter_chambre(chambre12);
+	hotel3.ajouter_chambre(chambre14);
+	hotel3.ajouter_chambre(chambre15);
+
+	// 10 clients
+	Client::Client client1(save.get_id_client(), "Nom1", "Prenom1");
+	Client::Client client2(save.get_id_client(), "Nom2", "Prenom2");
+	Client::Client client3(save.get_id_client(), "Nom3", "Prenom3");
+	Client::Client client4(save.get_id_client(), "Nom4", "Prenom4");
+	Client::Client client5(save.get_id_client(), "Nom5", "Prenom5");
+	Client::Client client6(save.get_id_client(), "Nom6", "Prenom6");
+	Client::Client client7(save.get_id_client(), "Nom6", "Prenom7");	//homonyme
+	Client::Client client8(save.get_id_client(), "Nom8", "Prenom8");
+	Client::Client client9(save.get_id_client(), "Nom9", "Prenom9");
+	Client::Client client10(save.get_id_client(), "Nom10", "Prenom10");
+
+	// on ajoute les clients dans les hotels :
+	hotel1.ajouter_client(client1);
+	hotel1.ajouter_client(client2);
+	hotel2.ajouter_client(client3);
+	hotel2.ajouter_client(client4);
+	hotel3.ajouter_client(client5);
+	hotel3.ajouter_client(client6);
+	hotel3.ajouter_client(client7);
+	hotel3.ajouter_client(client8);
+	hotel3.ajouter_client(client9);
+	hotel3.ajouter_client(client10);
+
+	// une fois les hotels initialisés, on les ajoute dans l'objet stockage
+	save.Ajouter_hotel(hotel1);
+	save.Ajouter_hotel(hotel2);
+	save.Ajouter_hotel(hotel3);
+
+	// on crée des réservations (hotel 1)
 	Date::Date date(2020, 6, 1);
 	Date::Date datefin(2020, 7, 1);
-	Reservation::Reservation reser1(save.get_id_reservation(), date, datefin, save.get_hotel(1), chambre1, client1);
+	Reservation::Reservation reser1(save.get_id_reservation(), date, datefin, save.get_hotel(1), save.get_hotel(1).get_liste_chambres().at(0), save.get_hotel(1).get_liste_clients().at(0));	//Reservation avec une id attribué dynamiquement, avec l'hotel 1, la chambre numero 1 de l'hotel (chambre1) et le client numero 1 de l'hotel (client1)
 	date = date+60;
 	datefin = datefin + 60;
-	Reservation::Reservation reser2(save.get_id_reservation(), date, datefin, save.get_hotel(1), chambre1, client2);
+	Reservation::Reservation reser2(save.get_id_reservation(), date, datefin, save.get_hotel(1), save.get_hotel(1).get_liste_chambres().at(0), save.get_hotel(1).get_liste_clients().at(1));	//Reservation avec une id attribué dynamiquement, avec l'hotel 1, la chambre numero 1 de l'hotel (chambre1) et le client numero 2 de l'hotel (client2)
 	date = date + 60;
 	datefin = datefin + 60;
-	Reservation::Reservation reser3(save.get_id_reservation(), date, datefin, save.get_hotel(1), chambre2, client1);
+	Reservation::Reservation reser3(save.get_id_reservation(), date, datefin, save.get_hotel(1), save.get_hotel(1).get_liste_chambres().at(1), save.get_hotel(1).get_liste_clients().at(1));	//Reservation avec une id attribué dynamiquement, avec l'hotel 1, la chambre numero 2 de l'hotel (chambre2) et le client numero 2 de l'hotel (client2)
 	date = date + 60;
 	datefin = datefin + 60;
-	Reservation::Reservation reser4(save.get_id_reservation(), date, datefin, save.get_hotel(1), chambre1, client1);
+	Reservation::Reservation reser4(save.get_id_reservation(), date, datefin, save.get_hotel(1), save.get_hotel(1).get_liste_chambres().at(2), save.get_hotel(1).get_liste_clients().at(0));	//Reservation avec une id attribué dynamiquement, avec l'hotel 1, la chambre numero 3 de l'hotel (chambre3) et le client numero 1 de l'hotel (client1)
+	// on crée des réservations (hotel 2)
+	Date::Date date2(2020, 6, 1);
+	Date::Date datefin2(2020, 7, 1);
+	Reservation::Reservation reser5(save.get_id_reservation(), date2, datefin2, save.get_hotel(2), save.get_hotel(2).get_liste_chambres().at(0), save.get_hotel(2).get_liste_clients().at(0));	//Reservation avec une id attribué dynamiquement, avec l'hotel 2, la chambre numero 1 de l'hotel (chambre4) et le client numero 1 de l'hotel (client3)
+	date2 = date2 + 60;
+	datefin2 = datefin2 + 60;
+	Reservation::Reservation reser6(save.get_id_reservation(), date2, datefin2, save.get_hotel(2), save.get_hotel(2).get_liste_chambres().at(1), save.get_hotel(2).get_liste_clients().at(0));	//Reservation avec une id attribué dynamiquement, avec l'hotel 2, la chambre numero 2 de l'hotel (chambre5) et le client numero 1 de l'hotel (client3)
+	date2 = date2 + 60;
+	datefin2 = datefin2 + 60;
+	Reservation::Reservation reser7(save.get_id_reservation(), date2, datefin2, save.get_hotel(2), save.get_hotel(2).get_liste_chambres().at(2), save.get_hotel(2).get_liste_clients().at(0));	//Reservation avec une id attribué dynamiquement, avec l'hotel 2, la chambre numero 3 de l'hotel (chambre6) et le client numero 1 de l'hotel (client3)
+	date2 = date2 + 60;
+	datefin2 = datefin2 + 60;
+	Reservation::Reservation reser8(save.get_id_reservation(), date2, datefin2, save.get_hotel(2), save.get_hotel(2).get_liste_chambres().at(3), save.get_hotel(2).get_liste_clients().at(1));	//Reservation avec une id attribué dynamiquement, avec l'hotel 2, la chambre numero 4 de l'hotel (chambre10) et le client numero 2 de l'hotel (client4)
+	// on crée des réservations (hotel 3)
+	Date::Date date3(2020, 6, 1);
+	Date::Date datefin3(2020, 7, 1);
+	Reservation::Reservation reser9(save.get_id_reservation(), date3, datefin3, save.get_hotel(3), save.get_hotel(3).get_liste_chambres().at(1), save.get_hotel(3).get_liste_clients().at(0));	//Reservation avec une id attribué dynamiquement, avec l'hotel 3, la chambre numero 2 de l'hotel (chambre11) et le client numero 1 de l'hotel (client5)
+	date3 = date3 + 60;
+	datefin3 = datefin3 + 60;
+	Reservation::Reservation reser10(save.get_id_reservation(), date3, datefin3, save.get_hotel(3), save.get_hotel(3).get_liste_chambres().at(2), save.get_hotel(3).get_liste_clients().at(0));	//Reservation avec une id attribué dynamiquement, avec l'hotel 3, la chambre numero 3 de l'hotel (chambre12) et le client numero 1 de l'hotel (client5)
+	date3 = date3 + 60;
+	datefin3 = datefin3 + 60;
+	Reservation::Reservation reser11(save.get_id_reservation(), date3, datefin3, save.get_hotel(3), save.get_hotel(3).get_liste_chambres().at(3), save.get_hotel(3).get_liste_clients().at(1));	//Reservation avec une id attribué dynamiquement, avec l'hotel 3, la chambre numero 4 de l'hotel (chambre14) et le client numero 2 de l'hotel (client6)
+	date3 = date3 + 60;
+	datefin3 = datefin3 + 60;
+	Reservation::Reservation reser12(save.get_id_reservation(), date3, datefin3, save.get_hotel(3), save.get_hotel(3).get_liste_chambres().at(3), save.get_hotel(3).get_liste_clients().at(2));	//Reservation avec une id attribué dynamiquement, avec l'hotel 3, la chambre numero 4 de l'hotel (chambre14) et le client numero 3 de l'hotel (client7)
 
 	save.Ajouter_reservation(reser1);
 	save.Ajouter_reservation(reser2);
 	save.Ajouter_reservation(reser3);
 	save.Ajouter_reservation(reser4);
+	save.Ajouter_reservation(reser5);
+	save.Ajouter_reservation(reser6);
+	save.Ajouter_reservation(reser7);
+	save.Ajouter_reservation(reser8);
+	save.Ajouter_reservation(reser9);
+	save.Ajouter_reservation(reser10);
+	save.Ajouter_reservation(reser11);
+	save.Ajouter_reservation(reser12);
+
 
 	start(save);
 
-	/*
-	//initialisation des 10 chambres de l'hotel
-	std::vector<Chambre::Chambre> liste;
-	Chambre::Chambre chambre1(save.get_id(), Type::Simple, 100);
-	liste.push_back(chambre1);
-	Chambre::Chambre chambre2(save.get_id(), Type::Simple, 100);
-	liste.push_back(chambre2);
-	Chambre::Chambre chambre3(save.get_id(), Type::Simple, 100);
-	liste.push_back(chambre3);
-	Chambre::Chambre chambre4(save.get_id(), Type::Double, 125);
-	liste.push_back(chambre4);
-	Chambre::Chambre chambre5(save.get_id(), Type::Double, 125);
-	liste.push_back(chambre5);
-	Chambre::Chambre chambre6(save.get_id(), Type::Double, 125);
-	liste.push_back(chambre6);
-	Chambre::Chambre chambre7(save.get_id(), Type::Double, 125);
-	liste.push_back(chambre7);
-	Chambre::Chambre chambre8(save.get_id(), Type::Double, 125);
-	liste.push_back(chambre8);
-	Chambre::Chambre chambre9(save.get_id(), Type::Suite, 210);
-	liste.push_back(chambre9);
-	Chambre::Chambre chambre10(save.get_id(), Type::Suite, 210);
-	liste.push_back(chambre10);
-
-	//initialisation des 10 clients
-	std::vector<Client::Client> liste_clients;
-	Client::Client client1(save.get_id(), "Nom1", "Prenom1");
-	liste_clients.push_back(client1);
-	Client::Client client2(save.get_id(), "Nom2", "Prenom2");
-	liste_clients.push_back(client2);
-	Client::Client client3(save.get_id(), "Nom3", "Prenom3");
-	liste_clients.push_back(client3);
-	Client::Client client4(save.get_id(), "Nom4", "Prenom4");
-	liste_clients.push_back(client4);
-	Client::Client client5(save.get_id(), "Nom5", "Prenom5");
-	liste_clients.push_back(client5);
-	Client::Client client6(save.get_id(), "Nom6", "Prenom6");
-	liste_clients.push_back(client6);
-	Client::Client client7(save.get_id(), "Nom7", "Prenom7");
-	liste_clients.push_back(client7);
-	Client::Client client8(save.get_id(), "Nom8", "Prenom8");
-	liste_clients.push_back(client8);
-	Client::Client client9(save.get_id(), "Nom9", "Prenom9");
-	liste_clients.push_back(client9);
-	Client::Client client100(save.get_id(), "Nom10", "Prenom10");
-	liste_clients.push_back(client100);
-	
-	//Creation de l'hotel
-	
-	Hotel::Hotel hotel1(save.get_id(), "L'hotel", "Dijon", liste, liste_clients);
-	std::vector<Reservation::Reservation> liste_reservations;
-	
-	//liste_reservations.push_back(ajouter_reservation(id.get_id(), hotel1));
-	*/
-
-	/*
-	liste_reservations.push_back(ajouter_reservation(1, hotel1));
-	liste_reservations.push_back(ajouter_reservation(2, hotel1));
-	liste_reservations.push_back(ajouter_reservation(3, hotel1));
-	*/
-
-	/*	Test avec les résérvations
-	Date::Date date(2020, 6, 1);
-	Date::Date date_fin = date + 30;
-	Reservation::Reservation reser(1, date, date_fin, hotel1, chambre1, client1);
-	liste_reservations.push_back(reser);
-	date = date + 35;
-	date_fin = date_fin + 35;
-	Reservation::Reservation reser2(2, date, date_fin, hotel1, chambre2, client1);
-	liste_reservations.push_back(reser2);
-	date = date + 35;
-	date_fin = date_fin + 35;
-	Reservation::Reservation reser3(3, date, date_fin, hotel1, chambre3, client1);
-	liste_reservations.push_back(reser3);
-	afficher_reservations_par_client(liste_reservations, "Nom1");
-	*/
-
-	/* Test modification chambre
-	std::cout << reser3.get_montant() << std::endl;
-	modifier_reservation(reser3);
-	std::cout << reser3.get_montant() << std::endl;
-	*/
-
-	/* Test annulation résérvation
-	std::cout << reser3.get_hotel().get_liste_clients().at(0).get_nbr_reservations() << std::endl;
-	reser3.Annuler();
-	reser2.Annuler();
-	reser.Annuler();
-	std::cout << reser3.get_hotel().get_liste_clients().at(0).get_nbr_reservations() << std::endl;
-	*/
-
-	//hotel1.get_liste_chambres().at(0).ajouter_jours_reservations(test, test_fin);
-	//std::cout << hotel1.get_liste_chambres().at(0).Check_disponibilite(test, test_fin) << std::endl;
-	
-
-	/* TESTS PARTIE 1
-	Chambre::Chambre chambre1(1, Type::Simple, 180);
-	Chambre::Chambre chambre2(2, Type::Double, 750);
-	Chambre::Chambre chambre3(3, Type::Simple, 180);
-	Chambre::Chambre chambre4(4, Type::Suite, 1800);
-	std::vector <Chambre::Chambre> liste;
-	liste.push_back(chambre2);
-	liste.push_back(chambre3);
-	liste.push_back(chambre4);
-
-	Hotel::Hotel hotel1("hotel_1", "THE hotel", "Ablain-Saint-Nazaire");
-	hotel1.ajouter_chambre(chambre1);
-	hotel1.ajouter_liste_chambres(liste);
-	*/
-
-	/*	
-	std::cout << hotel1.get_liste_chambres().size() << std::endl;
-	std::cout << hotel1.get_liste_chambres().at(0).get_prix() << std::endl;
-	std::cout << hotel1.get_liste_chambres().at(1).get_prix() << std::endl;
-	std::cout << hotel1.get_liste_chambres().at(2).get_prix() << std::endl;
-	std::cout << hotel1.get_liste_chambres().at(3).get_prix() << std::endl;
-	*/
-
-	/*
-	Client::Client client1(1, "Gelus", "Jules");
-	Client::Client client2(2, "Villaverde", "Lucas");
-	Date::Date date2(2021, 1, 28);
-	Date::Date datefin2(2021, 2, 4);
-	Reservation::Reservation reser0(2, date2, datefin2, hotel1, chambre4, client2);
-	Reservation::Reservation reser01(2, date2, datefin2, hotel1, chambre4, client2);
-	Reservation::Reservation reser02(2, date2, datefin2, hotel1, chambre4, client2);
-	std::cout << (datefin2 - date2) << std::endl;
-	std::cout << "Le sejour va couter : " << reser02.montant_total(2) << std::endl;
-	std::cout << "Le sejour va couter : " << reser02.montant_total(2, 0.9) << std::endl;
-
-	Date::Date date(2020, 1, 1);
-	Date::Date datefin(2021, 6, 1);
-	Date::Date datetest = (datefin + -366);
-	std::cout << "test : " << date.toString() << std::endl;
-	std::cout << "test : " << datetest.toString() << std::endl;
-	
-	Reservation::Reservation reser1(1, date, datefin ,hotel1 ,chambre3 ,client1);
-	Reservation::Reservation reser2(1, date, datefin, hotel1, chambre3, client1);
-	Reservation::Reservation reser3(1, date, datefin, hotel1, chambre3, client1);
-	*/
 	
 
 	return 0;
 
 }
 
-Reservation::Reservation ajouter_reservation(int id, Hotel::Hotel& hotel)
+Reservation::Reservation ajouter_reservation(int id, Hotel::Hotel& hotel)	//7.a
 {
 	//On demande la date de début
 	int année;
@@ -358,7 +315,7 @@ Reservation::Reservation ajouter_reservation(int id, Hotel::Hotel& hotel)
 	
 }
 
-int nbr_nuits(Date::Date date_debut, Date::Date date_fin)
+int nbr_nuits(Date::Date date_debut, Date::Date date_fin)	//7.b
 {
 	int nbr = date_fin - date_debut;	//Surcharge d'opérateur - dans la classe Date
 	return nbr;
@@ -436,12 +393,33 @@ void afficher_reservations(std::vector<Reservation::Reservation> liste)
 	}
 }
 
+void afficher_reservations(std::vector<Reservation::Reservation> liste, int nbr_reser, double reduc)	//Fonction d'affichage avec le prix réel
+{
+	if (liste.size() > 0) {
+		for (int i = 0; i < liste.size(); i++) {
+			std::cout << liste.at(i) << " Prix (avec reduction) : " << liste.at(i).montant_total(nbr_reser, reduc) << std::endl;
+		}
+	}
+}
+
+
 void afficher_reservations_par_numero(std::vector<Reservation::Reservation> liste, int numero)
 {
 	if (liste.size() > 0) {
 		for (int i = 0; i < liste.size(); i++) {
 			if (liste.at(i).get_id() == numero) {
 				std::cout << liste.at(i) << std::endl;
+			}
+		}
+	}
+}
+
+void afficher_reservations_par_numero(std::vector<Reservation::Reservation> liste, int numero, int nbr_reser, double reduc)
+{
+	if (liste.size() > 0) {
+		for (int i = 0; i < liste.size(); i++) {
+			if (liste.at(i).get_id() == numero) {
+				std::cout << liste.at(i) << " Prix (avec reduction) : " << liste.at(i).montant_total(nbr_reser, reduc) << std::endl;
 			}
 		}
 	}
@@ -458,6 +436,17 @@ void afficher_reservations_par_client(std::vector<Reservation::Reservation> list
 	}
 }
 
+void afficher_reservations_par_client(std::vector<Reservation::Reservation> liste, int id_client, int nbr_reser, double reduc)
+{
+	if (liste.size() > 0) {
+		for (int i = 0; i < liste.size(); i++) {
+			if (liste.at(i).get_id_client() == id_client) {
+				std::cout << liste.at(i) << " Prix (avec reduction) : " << liste.at(i).montant_total(nbr_reser, reduc) << std::endl;
+			}
+		}
+	}
+}
+
 void afficher_reservations_par_client(std::vector<Reservation::Reservation> liste, std::string nom_client)
 {
 	if (liste.size() > 0) {
@@ -469,10 +458,24 @@ void afficher_reservations_par_client(std::vector<Reservation::Reservation> list
 	}
 }
 
+void afficher_reservations_par_client(std::vector<Reservation::Reservation> liste, std::string nom_client, int nbr_reser, double reduc)
+{
+	if (liste.size() > 0) {
+		for (int i = 0; i < liste.size(); i++) {
+			if (liste.at(i).get_nom_client() == nom_client) {
+				std::cout << liste.at(i) << " Prix (avec reduction) : " << liste.at(i).montant_total(nbr_reser, reduc) << std::endl;
+			}
+		}
+	}
+}
+
+/*	Fonction pour modifier une réservation :
+	Obsolete avec la partie graphique
+
 void modifier_reservation(Reservation::Reservation& reservation)
 {
 	std::cout << " Que voulez vous modifier ?" << std::endl;
-	std::cout << " 1 : Changer la date de début" << std::endl;
+	std::cout << " 1 : Changer la date de debut" << std::endl;
 	std::cout << " 2 : Changer la date de fin" << std::endl;
 	std::cout << " 3 : Changer la chambre" << std::endl;
 	std::cout << " 4 : Changer le client" << std::endl;
@@ -507,6 +510,7 @@ void modifier_reservation(Reservation::Reservation& reservation)
 		reservation.set_client(choisir_client(hotel));
 	}
 }
+*/
 
 void afficher_menu()
 {
@@ -517,7 +521,8 @@ void afficher_menu()
 	std::cout << " 3 : Ajouter une reservation" << std::endl;
 	std::cout << " 4 : Modifier une reservation" << std::endl;
 	std::cout << " 5 : Afficher des informations" << std::endl;
-	std::cout << " 6 : Quitter " << std::endl << std::endl;
+	std::cout << " 6 : Appliquer un programme de fidelite" << std::endl;
+	std::cout << " 7 : Quitter " << std::endl << std::endl;
 	
 }
 
@@ -529,9 +534,8 @@ void afficher_menu_modif_hotel()
 	std::cout << " 2 : Modifier une chambre" << std::endl;
 	std::cout << " 3 : Ajouter un client" << std::endl;
 	std::cout << " 4 : Supprimer un client" << std::endl;
-	std::cout << " 5 : Modifier le nom de l'hotel" << std::endl;
-	std::cout << " 6 : Appliquer un programme de fidelite" << std::endl;	//
-	std::cout << " 7 : Retour au menu " << std::endl << std::endl;
+	std::cout << " 5 : Modifier le nom de l'hotel" << std::endl;	
+	std::cout << " 6 : Retour au menu " << std::endl << std::endl;
 }
 
 void afficher_menu_modif_chambre()
@@ -810,23 +814,6 @@ void start(Stockage& save)
 			start(save);
 		}
 		else if (choix_2 == 6) {
-			//Programme de fidelite
-
-			system("CLS");
-			std::cout << "Rentrer le nombre de reservation necessaire pour avoir une reduction" << std::endl;
-			int nombre;
-			std::cin >> nombre;
-			std::cout << std::endl;
-			std::cout << "Rentrer le pourcentage de reduction (0.1 pour 10%...)" << std::endl;
-			double pourcentage;
-			std::cin >> pourcentage;
-			std::cout << std::endl;
-			save.set_nbr_reser(nombre);
-			save.set_pourcentage_reduc(pourcentage);
-			start(save);
-
-		}
-		else if (choix_2 == 7) {
 			start(save);
 		}
 		else {
@@ -891,6 +878,7 @@ void start(Stockage& save)
 			std::cout << std::endl;
 
 			Date::Date date_debut(année, mois, jour);
+
 
 			save.get_reservation(id_reservation).set_date_debut(date_debut);
 			start(save);
@@ -982,7 +970,6 @@ void start(Stockage& save)
 			start(save);
 		}
 
-
 		
 	}
 	else if (choix == 5) {
@@ -994,7 +981,7 @@ void start(Stockage& save)
 		std::cout << std::endl;
 
 		int id_hotel = 0;
-		if ((choix_5 == 2) || (choix_5 == 3)) {
+		if ((choix_5 == 2) || (choix_5 == 3) || (choix_5 == 7)) {
 			system("CLS");
 			std::cout << "Rentrer l'id de l'hotel" << std::endl;
 			std::cin >> id_hotel;
@@ -1043,7 +1030,8 @@ void start(Stockage& save)
 		else if (choix_5 == 4) {
 			//Liste des reservations
 			system("CLS");
-			afficher_reservations(save.get_liste_reservation());
+			afficher_reservations(save.get_liste_reservation(), save.get_nbr_reser(), save.get_pourcentage_reduc());
+
 		}
 		else if (choix_5 == 5) {
 			//Liste des reservations par id
@@ -1053,7 +1041,7 @@ void start(Stockage& save)
 			std::cin >> id_reservation;
 			std::cout << std::endl;
 			
-			afficher_reservations_par_numero(save.get_liste_reservation(), id_reservation);
+			afficher_reservations_par_numero(save.get_liste_reservation(), id_reservation, save.get_nbr_reser(), save.get_pourcentage_reduc());
 		}
 		else if (choix_5 == 6) {
 			//Liste des reservations par id de client
@@ -1063,7 +1051,7 @@ void start(Stockage& save)
 			std::cin >> id_client;
 			std::cout << std::endl;
 
-			afficher_reservations_par_client(save.get_liste_reservation(), id_client);
+			afficher_reservations_par_client(save.get_liste_reservation(), id_client, save.get_nbr_reser(), save.get_pourcentage_reduc());
 
 			std::cout << std::endl;
 			double total = 0;
@@ -1072,7 +1060,7 @@ void start(Stockage& save)
 				for (int i = 0; i < save.get_liste_reservation().size(); i++) {
 					if (save.get_liste_reservation().at(i).get_id_client() == id_client) {
 						total += save.get_liste_reservation().at(i).montant_total(save.get_nbr_reser(), save.get_pourcentage_reduc());
-						std::cout << "Prix reservation numero " << i << " = " << save.get_liste_reservation().at(i).montant_total(save.get_nbr_reser(), save.get_pourcentage_reduc()) << " $" << std::endl;
+						std::cout << "Prix reservation numero " << i+1 << " = " << save.get_liste_reservation().at(i).montant_total(save.get_nbr_reser(), save.get_pourcentage_reduc()) << " $" << std::endl;
 					}
 				}
 			}
@@ -1082,21 +1070,19 @@ void start(Stockage& save)
 		else if (choix_5 == 7) {
 			//Liste des reservations par nom de client
 			system("CLS");
-			std::string nom;
-			std::cout << "Rentrer le nom du client" << std::endl;
-			std::cin >> nom;
+			int id_client = choisir_client(save.get_hotel(id_hotel)).get_id();	//On gere les homonymes
 			std::cout << std::endl;
 			
-			afficher_reservations_par_client(save.get_liste_reservation(), nom);
+			afficher_reservations_par_client(save.get_liste_reservation(), id_client, save.get_nbr_reser(), save.get_pourcentage_reduc());
 
 			std::cout << std::endl;
 			double total = 0;
 
 			if (save.get_liste_reservation().size() > 0) {
 				for (int i = 0; i < save.get_liste_reservation().size(); i++) {
-					if (save.get_liste_reservation().at(i).get_nom_client() == nom) {
+					if (save.get_liste_reservation().at(i).get_id_client() == id_client) {
 						total += save.get_liste_reservation().at(i).montant_total(save.get_nbr_reser(), save.get_pourcentage_reduc());
-						std::cout << "Prix reservation numero " << i << " = " << save.get_liste_reservation().at(i).montant_total(save.get_nbr_reser(), save.get_pourcentage_reduc()) << " $" << std::endl;
+						std::cout << "Prix reservation numero " << i+1 << " = " << save.get_liste_reservation().at(i).montant_total(save.get_nbr_reser(), save.get_pourcentage_reduc()) << " $" << std::endl;
 					}
 				}
 			}
@@ -1118,7 +1104,25 @@ void start(Stockage& save)
 
 	}
 	else if (choix == 6) {
+	//Programme de fidelite
+
+	system("CLS");
+	std::cout << "Rentrer le nombre de reservation necessaire pour avoir une reduction" << std::endl;
+	int nombre;
+	std::cin >> nombre;
+	std::cout << std::endl;
+	std::cout << "Rentrer le pourcentage de reduction (0.1 pour 10%...)" << std::endl;
+	double pourcentage;
+	std::cin >> pourcentage;
+	std::cout << std::endl;
+	save.set_nbr_reser(nombre);
+	save.set_pourcentage_reduc(pourcentage);
+	start(save);
+
+	}
+	else if (choix == 6) {
 		//Fin de programme : on retourne dans le main
+		
 	}
 	else{
 		start(save);	//Aucune entrée ne correspond
